@@ -1,0 +1,91 @@
+====================================================================================================
+PHASE 5 & 6: OUT-OF-SAMPLE MODEL BENCHMARKS (JUNE 2026 TEST SET), NEGATIVE CONTROL & SENSITIVITY
+====================================================================================================
+
+====================================================================================================
+[MODEL TRACK 1: NEXT-ITEM BASKET UPSELL CLASSIFIER & PROFIT OPTIMIZER (TRAIN: JAN-MAY -> TEST: JUNE)]
+====================================================================================================
+Multi-item baskets — Train (Jan-May): 12,502 | Out-of-Sample Test (June): 3,210
+
+Historical Mean Gross Profit per Line Item ($) by Branch & Category (Jan-May Train):
+Category  Bakery  Breakfast  Cold Coffee  Cold Drinks  Desserts  Hot Coffee  Matcha & Tea  Meals  Sandwiches
+Branch                                                                                                      
+Garden      2.07       3.67         3.14         2.19      2.27        2.76          3.27   4.33        3.54
+Harbour     2.94       5.70         4.09         2.91      3.76        3.59          4.55   6.87        6.14
+Uptown      2.62       4.99         3.72         2.53      3.48        3.20          4.06   6.22        5.44
+
+Out-of-Sample Evaluation on Unseen June 2026 Test Set (3,210 Multi-Item Baskets):
+                                                             Model  Log_Loss  Top1_Acc_%  Top2_Acc_%  Realized_GP_Top1_$/tx  Realized_GP_Top2_$/tx  Mean_GP_per_Top1_Hit_$
+   Baseline 0: Marginal Popularity Only (Always Bakery/Hot Coffee)    1.9961     25.4829     44.9844                 0.6743                 1.3150                  2.6461
+               Baseline 1: 9x9 Conditional Lookup P(Cat_1 | Cat_0)    1.9184     30.4984     48.6293                 0.8516                 1.4548                  2.7924
+      Model A1: Parsimonious Logistic (Cat_0 + TimeBlock + Branch)    1.9168     30.3738     48.4424                 0.8551                 1.4545                  2.8151
+       Model A2: Margin-Aware Profit Optimizer (max P * Branch_GP)    1.9168     27.9128     45.3271                 0.8487                 1.4226                  3.0406
+Model B: Complex Gradient Boosting (All Features: Prod_0+Hour+...)    1.9360     29.9377     47.3520                 0.8449                 1.4145                  2.8222
+
+Recommended POS Upsell Prompt Table by Anchor Category (Row 1) & Time Block:
+Anchor_Category (Row 1)    Top_1_Prob_AddOn    Top_2_Prob_AddOn Profit_Optimal_AddOn (Harbour) Profit_Optimal_AddOn (Garden)
+                 Bakery  Hot Coffee (34.3%) Cold Coffee (23.3%)       Hot Coffee (E[GP]=$1.23)      Hot Coffee (E[GP]=$0.95)
+              Breakfast      Bakery (20.8%)  Hot Coffee (17.1%)       Hot Coffee (E[GP]=$0.62)      Hot Coffee (E[GP]=$0.47)
+            Cold Coffee      Bakery (21.9%)  Hot Coffee (18.1%)       Hot Coffee (E[GP]=$0.65)      Hot Coffee (E[GP]=$0.50)
+            Cold Drinks      Bakery (19.6%)  Hot Coffee (18.9%)       Hot Coffee (E[GP]=$0.68)      Hot Coffee (E[GP]=$0.52)
+               Desserts      Bakery (19.6%)  Hot Coffee (17.6%)     Matcha & Tea (E[GP]=$0.72)    Matcha & Tea (E[GP]=$0.52)
+             Hot Coffee      Bakery (21.0%)  Hot Coffee (17.2%)     Matcha & Tea (E[GP]=$0.67)    Matcha & Tea (E[GP]=$0.48)
+           Matcha & Tea      Bakery (53.0%)  Hot Coffee (11.0%)           Bakery (E[GP]=$1.56)          Bakery (E[GP]=$1.10)
+                  Meals Cold Drinks (26.7%)      Bakery (18.3%)      Cold Drinks (E[GP]=$0.78)     Cold Drinks (E[GP]=$0.59)
+             Sandwiches Cold Drinks (27.5%)      Bakery (16.6%)      Cold Drinks (E[GP]=$0.80)     Cold Drinks (E[GP]=$0.60)
+
+====================================================================================================
+[MODEL TRACK 2: DAILY BRANCH ORDER VOLUME FORECASTER (TRAIN: JAN-MAY 453 DAYS -> TEST: JUNE 90 DAYS)]
+====================================================================================================
+
+Out-of-Sample Daily Branch Volume Forecast on June 2026 (90 Branch-Days):
+                                                          Forecasting_Model    MAE   RMSE  MAPE_%  Out_of_Sample_R2  Tuesday_MAE  Tuesday_Mean_Bias
+                       Baseline 1: Historical Branch Average (Jan-May Mean) 20.267 29.212  23.415             0.359       55.039            -55.039
+                                  Baseline 2: 28-Day Rolling Branch Average 15.639 22.882  20.921             0.607       41.705            -41.705
+                  Baseline 3: Seasonal Naive (Lag-7 Same Weekday Last Week)  9.600 11.611  13.876             0.899       15.200             -2.133
+           Model A: Additive Linear Regression (Trend + DayOfWeek + Branch) 10.425 14.701  14.894             0.838       22.449             -9.861
+Model B: Multiplicative Log-Linear GLM (log(Orders) ~ Trend + DoW + Branch)  6.891  8.810  10.582             0.942        9.401              1.229
+          Model C: Complex Gradient Boosting (Trend + Lags + Rolling + DoW)  8.784 12.209  12.331             0.888       17.431             -4.618
+
+====================================================================================================
+[MODEL TRACK 3 (NEGATIVE CONTROL): CUSTOMER ID PERSONALIZATION / CHURN BENCHMARK ON JUNE 2026]
+====================================================================================================
+Task 3A — Predicting Customer June Visit Count from Jan-May RFM History (n=1043 test customers):
+  - Simple Baseline (Global Mean = 1.27 visits): RMSE = 1.1621 | R^2 = -0.0012
+  - Ridge Regression on RFM Features:                 RMSE = 1.1630 | R^2 = -0.0027
+  - Random Forest on RFM Features:                    RMSE = 1.1649 | R^2 = -0.0059
+
+Task 3B — Predicting Customer June Basket Spend ($) from Jan-May Spend & RFM (n=733 returning customers):
+  - Simple Baseline (Global Mean = $9.05): RMSE = $4.0423 | R^2 = -0.0020
+  - Customer Historical Spend Lookup (Predict Hist Mean): RMSE = $4.7217 | R^2 = -0.3671
+  - Ridge Regression on RFM Features:                    RMSE = $4.0489 | R^2 = -0.0053
+
+Task 3C — Predicting June Transaction Branch & Category from Customer's Jan-May Favorite (n=4,384 June tx):
+  - Branch Prediction:   Simple Baseline (Always 'Harbour') = 49.34% vs Customer's Jan-May Favorite Branch = 41.15% (Lift = -8.19%)
+  - Category Prediction: Simple Baseline (Always 'Bakery')  = 20.48% vs Customer's Jan-May Favorite Category = 15.83% (Lift = -4.65%)
+
+====================================================================================================
+[SENSITIVITY & COUNTERFACTUAL VALUATION TABLES]
+====================================================================================================
+
+1. Garden Branch Unit-Cost Recovery Sensitivity (Annualized = 2x 6-Month Volume):
+  - If     0% of gap is real operational cost (not accounting allocation): 50% fix saves $     0.00/yr | 100% fix saves $     0.00/yr
+  - If    25% of gap is real operational cost (not accounting allocation): 50% fix saves $ 4,166.65/yr | 100% fix saves $ 8,333.31/yr
+  - If    50% of gap is real operational cost (not accounting allocation): 50% fix saves $ 8,333.31/yr | 100% fix saves $16,666.62/yr
+  - If    75% of gap is real operational cost (not accounting allocation): 50% fix saves $12,499.97/yr | 100% fix saves $24,999.93/yr
+  - If   100% of gap is real operational cost (not accounting allocation): 50% fix saves $16,666.62/yr | 100% fix saves $33,333.24/yr
+
+2. Discount Removal Break-Even Demand Elasticity:
+  - Harbour 15% Promo (Cold Coffee & Desserts, 66.1% base margin): Required volume lift to break even = +29.3% | Observed lift = -0.3% (Loss = $471.55 / 6mo)
+  - Garden 10% Discount (46.9% base margin):                      Required volume lift to break even = +27.1% | Observed lift =  0.0% (Loss = $555.90 / 6mo)
+  - Uptown 10% Discount (63.0% base margin):                      Required volume lift to break even = +18.9% | Observed lift =  0.0% (Loss = $322.15 / 6mo)
+  - Harbour 10% Discount (65.4% base margin):                     Required volume lift to break even = +18.1% | Observed lift =  0.0% (Loss = $828.49 / 6mo)
+
+3. POS Contextual Add-On Prompt Sensitivity (Applied to 18,175 Single-Item Orders / 6mo = 36,350/yr):
+  - Conversion rate =  1.0% -> +   364 add-on items/yr | Est. Annual Revenue = +$   1,890/yr | Est. Annual Gross Profit = +$   1,236/yr
+  - Conversion rate =  2.0% -> +   727 add-on items/yr | Est. Annual Revenue = +$   3,780/yr | Est. Annual Gross Profit = +$   2,472/yr
+  - Conversion rate =  3.0% -> + 1,090 add-on items/yr | Est. Annual Revenue = +$   5,671/yr | Est. Annual Gross Profit = +$   3,708/yr
+  - Conversion rate =  5.0% -> + 1,818 add-on items/yr | Est. Annual Revenue = +$   9,451/yr | Est. Annual Gross Profit = +$   6,180/yr
+  - Conversion rate =  8.0% -> + 2,908 add-on items/yr | Est. Annual Revenue = +$  15,122/yr | Est. Annual Gross Profit = +$   9,887/yr
+
+Successfully generated all 4 figures in figures/ directory.

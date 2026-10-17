@@ -1,0 +1,88 @@
+====================================================================================================
+PHASE 8: THE PRICING DECISION — WHAT THE DATA CAN AND CANNOT SAY, AND A STAGED PRICE RISE WITH A STOP RULE
+====================================================================================================
+
+[STEP 1: THE ONLY PRICE CHANGE IN THE DATA — HARBOUR'S 15% PROMO (16 DAYS, COLD COFFEE + DESSERTS)]
+Promo-item units: Harbour promo categories vs Harbour other categories, relative to the same ratio at Garden+Uptown.
+Traffic: Harbour transactions relative to Garden+Uptown transactions.
+Outcome               Control days                                   Effect                95% CI
+Promo-item units      Mar & May non-promo days (same months)          +9.6%   [-8.3%, +31.6%]
+Promo-item units      All non-promo days, month x weekday adj.        +6.1%   [-4.9%, +18.7%]
+Harbour traffic       Mar & May non-promo days (same months)          +0.7%   [-5.1%, +6.8%]
+Harbour traffic       All non-promo days, month x weekday adj.        +0.3%   [-4.5%, +4.8%]
+
+Implied price elasticity of promo items (volume change / -15% price): point -0.64, 95% CI -2.10 to +0.55
+Reading: traffic did not respond (the CI rules out more than about +7%), but the item-level CI is too wide to
+pin down price sensitivity. It cannot distinguish 'customers ignore price' from 'customers are very price-sensitive'.
+Why: 16 days, one branch, two categories, ~20 promo units/day, and day-to-day noise of ~15%.
+CORRECTION to Finding 2: 'zero detectable lift' should read 'no traffic lift; item-level lift inconclusive'.
+
+====================================================================================================
+[STEP 2: WHAT A MENU PRICE RISE IS WORTH, AND HOW PRICE-SENSITIVE CUSTOMERS WOULD HAVE TO BE TO MAKE IT LOSE MONEY]
+====================================================================================================
+Base: June 2026 run-rate revenue $2,088/day ($762,145/yr, no further growth assumed); gross margin 58.7%
+Formula: change in GP = Revenue x [(1 + e x p)(m + p) - m], e = elasticity, p = price rise, m = margin.
+Break-even elasticity e* = -1 / (m + p): any customer response milder than e* makes the rise profitable.
+
+Price rise  Break-even vol. loss  Break-even e*   GP/yr @ e=+0.0   GP/yr @ e=-0.5   GP/yr @ e=-1.0   GP/yr @ e=-2.0
+       +2%                  3.3%          -1.65           15,243           10,613            5,982           -3,278
+       +3%                  4.9%          -1.62           22,864           15,805            8,745           -5,375
+       +5%                  7.9%          -1.57           38,107           25,960           13,813          -10,482
+       +8%                 12.0%          -1.50           60,972           40,621           20,271          -20,429
+
+By branch, +5% (June run-rate):
+  Garden   revenue $  244,980/yr, margin 46.9%, break-even e* -1.93, GP gain @ e=-0.5: $9,070/yr
+  Harbour  revenue $  384,350/yr, margin 65.0%, break-even e* -1.43, GP gain @ e=-0.5: $12,495/yr
+  Uptown   revenue $  132,815/yr, margin 62.6%, break-even e* -1.48, GP gain @ e=-0.5: $4,395/yr
+  Garden has the lowest margin, so it tolerates the MOST price sensitivity before a rise loses money, and
+  +5% at Garden puts it exactly on Harbour's existing price list — a price customers already pay at the main branch.
+
+Supporting (weak, cross-sectional) evidence: Harbour already charges 5.0% more than Garden and 9.4% more than Uptown
+on every item, and its customers buy the same baskets:
+  items per order Garden 1.515, Harbour 1.509, Uptown 1.505 | units per order Garden 1.598, Harbour 1.597, Uptown 1.590
+  This does NOT measure elasticity (each branch has a different location and customer base); it only shows that
+  Stories' customers already accept the Harbour price list at its busiest branch.
+
+====================================================================================================
+[STEP 3: STAGED +5% RISE — PILOT AT GARDEN, THEN ALL BRANCHES — SIMULATED ON REAL NOISE]
+====================================================================================================
+Metric: daily log(units at Garden / units at Harbour+Uptown), adjusted for month x weekday.
+Its day-to-day noise in Jan-Jun: SD 0.142 (~14%), lag-1 autocorrelation -0.10.
+
+Plan: raise Garden +5%; compare with the 8 weeks before, relative to the other branches; check weekly.
+  Stop rule: roll back as soon as we are >=80% confident the volume loss exceeds Garden's break-even (9.6%).
+  At week 12: keep Garden if the estimated loss is below its break-even; otherwise roll back.
+  Simulation: daily noise is resampled from the real Jan-Jun residuals; the true effect is injected; repeated 4,000 times per elasticity. 12-month GP is compared with changing nothing.
+  Extension rule: at week 12 the rise goes to each other branch only if the measured loss is inside THAT branch's
+  break-even (Garden 9.6%, Harbour 7.1%, Uptown 7.4%): Garden's low margin makes it the
+  most tolerant branch, so passing at Garden alone is not enough for Harbour or Uptown.
+
+Elasticity  Raise all now  Staged plan  Staged P5   P(keep   P(extend  Wks to stop
+             (12-mo GP $)     (mean $) (worst 5%)  Garden)   Harbour) (if stopped)
+     +0.00         38,107       32,030     32,156     100%       100%            -
+     -0.25         32,034       26,730     27,115      99%        98%          1.1
+     -0.50         25,960       21,440     22,073      98%        96%          1.9
+     -1.00         13,813       10,292        226      92%        79%          2.9
+     -1.50          1,665        1,736         52      74%        42%          4.6
+     -2.00        -10,482         -942     -8,178      35%         9%          4.9
+     -3.00        -34,777         -301       -917       0%         0%          2.1
+     -4.00        -59,071         -284       -506       0%         0%          1.1
+
+Reading the table:
+  * If customers respond like elasticity -0.5, the staged plan earns about $21,440 in 12 months.
+  * Across every elasticity tested (down to -4, far beyond what any data here suggests), the staged plan's average
+    outcome is never worse than a $942 loss (worst 5% of runs: $8,178): the stop rule
+    caps the downside at a few weeks of one branch.
+  * 'Raise everywhere now' earns ~$6,077 more if customers ignore price (the price of caution), but
+    loses $10,482/yr at elasticity -2 and $34,777/yr at -3.
+  * The pilot does NOT measure elasticity precisely; it only answers 'is the loss worse than break-even?',
+    which is the only question the decision needs.
+
+Assumptions & limits:
+  * Revenue base is June's run-rate with no further growth; growth would raise every $ figure proportionally.
+  * Volume response is immediate and stable; slow erosion (customers drifting away over months) would be caught late.
+    Mitigation: keep the weekly comparison running for 6 months after rollout.
+  * The other branches are a valid comparison: no simultaneous promotions, menu changes or local events at Garden.
+  * Customers do not switch branches because of the rise. If Garden customers move to Harbour, Garden's volume
+    falls but chain profit does not; the pilot would read this as price sensitivity and be conservative.
+  * Elasticity is uniform across items. Item-level rises (e.g. only Matcha & Tea, 59-82% margin) need a separate test.

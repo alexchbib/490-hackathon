@@ -1,0 +1,147 @@
+===============================================================================================
+COMPREHENSIVE VERIFICATION OF ALL CLAIMS + MONTE CARLO SHUFFLE / SYNTHETIC TESTS
+===============================================================================================
+
+[1. EXACT DUPLICATES CHECK]
+Count of extra exact duplicate rows: 0
+Revenue of extra exact duplicate rows: $0.00
+Gross Profit of extra exact duplicate rows: $0.00
+By branch:
+Series([], )
+Total duplicate (Transaction ID, Product) extra rows: 166 (132 exact + 34 non-exact differing only in Qty/Disc)
+
+[2. GARDEN UNIT COST & PRICE MULTIPLIER CHECK]
+Garden Unit Cost vs Harbour: mean=1.4301x (range 1.4261 to 1.4386) [Note: Harbour = 0.70 * Garden]
+Garden Unit Cost vs Uptown:  mean=1.4903x (range 1.4815 to 1.5000) [Note: Uptown = 0.67 * Garden]
+Garden Unit Cost vs Avg(Harbour, Uptown): mean=1.4596x (range 1.4545 to 1.4646)
+6-Month Excess Cost at Garden:
+  - vs Harbour unit cost:          $15,923.47 ($31,846.94/yr)
+  - vs Avg(Harbour, Uptown) cost:  $16,666.62 ($33,333.25/yr)
+  - vs Uptown unit cost:           $17,409.78 ($34,819.56/yr)
+
+[3. EXACT MECHANISM OF THE 15% DISCOUNT AT HARBOUR]
+Total 15% discount lines: 504
+Branches with 15% discount: ['Harbour']
+Categories with 15% discount: {'Cold Coffee': 324, 'Desserts': 180}
+Exact Dates with 15% discount:
+Date
+2026-03-12    29
+2026-03-13    26
+2026-03-14    20
+2026-03-15    24
+2026-03-16    25
+2026-03-17    41
+2026-03-18    24
+2026-03-19    35
+2026-05-12    43
+2026-05-13    39
+2026-05-14    34
+2026-05-15    30
+2026-05-16    29
+2026-05-17    20
+2026-05-18    40
+2026-05-19    45
+
+Inside Harbour during Mar 12-19 & May 12-19, Discount Rate by Category:
+Discount Rate   0.0  0.1  0.15   All
+Category                            
+Bakery          479   29     0   508
+Breakfast       106    5     0   111
+Cold Coffee       0    0   324   324
+Cold Drinks     223   13     0   236
+Desserts          0    0   180   180
+Hot Coffee      329   32     0   361
+Matcha & Tea    313   24     0   337
+Meals            64    2     0    66
+Sandwiches      149    4     0   153
+All            1663  109   504  2276
+Discount Rate    0.00    0.10  0.15
+Category                           
+Bakery         0.9429  0.0571   0.0
+Breakfast      0.9550  0.0450   0.0
+Cold Coffee    0.0000  0.0000   1.0
+Cold Drinks    0.9449  0.0551   0.0
+Desserts       0.0000  0.0000   1.0
+Hot Coffee     0.9114  0.0886   0.0
+Matcha & Tea   0.9288  0.0712   0.0
+Meals          0.9697  0.0303   0.0
+Sandwiches     0.9739  0.0261   0.0
+
+Harbour traffic ratio to (Garden + Uptown) inside vs outside 15% promo windows:
+         count      mean       std
+In15Win                           
+False      165  0.940202  0.157178
+True        16  0.935377  0.079590
+
+Harbour Category Share (%) inside Mar 12-19 & May 12-19 vs all other days:
+Category  Bakery  Breakfast  Cold Coffee  Cold Drinks  Desserts  Hot Coffee  Matcha & Tea  Meals  Sandwiches
+In15Win                                                                                                     
+False      22.45       4.46        14.89        10.03      7.73       16.26         15.00   2.68        6.49
+True       22.09       4.74        14.52        10.36      8.03       15.77         14.68   2.95        6.86
+
+[4. MONTE CARLO SHUFFLE TEST FOR CUSTOMER ID (20 SHUFFLES)]
+Customer ID Real vs 20x Random Permutation Test:
+                       Observed  Shuffle_Mean  Shuffle_Std  Z_Score
+top_branch_share         0.5948        0.5924       0.0028   0.8561
+all3_branches_pct       55.8672       56.5155       0.8141  -0.7963
+single_branch_pct        6.2106        5.9101       0.3507   0.8569
+hour_std                 4.3874        4.3821       0.0138   0.3815
+single_ot_pct           10.4751       10.6955       0.3778  -0.5834
+branch_hops_2h          67.0000       65.8000      10.1286   0.1185
+multi_visit_cust_days  413.0000      391.0500      25.8589   0.8488
+
+[5. EXPLAINING SUMMARY 2'S 'SAME-DAY REPEAT' ARTIFACT!]
+Observed repeat-day rate by first transaction's Order Type:
+Order Type
+Dine-in     1.564
+Takeaway    2.529
+Why? Because the first transaction of a multi-visit day occurs earlier in the day (avg Hour = 14.28 vs single-visit day avg Hour = 16.65), and Takeaway is 54% before 18:00 vs 28% after 18:00!
+
+[6. BASKET PAIRING TEST: RAW LIFT VS TIME-OF-DAY & BRANCH CONDITIONED SHUFFLE]
+Top & Bottom Category Pairs vs Null Model Conditioned on (Branch, Hour) [50 Monte Carlo shuffles]:
+                           Observed  Expected_Given_Branch_Hour    Std  Lift_Given_Branch_Hour  Z_Score
+Bakery       Matcha & Tea      2076                     1272.24  27.78                    1.63    28.93
+Cold Drinks  Sandwiches         549                      291.32  15.54                    1.88    16.58
+Bakery       Hot Coffee        1645                     1345.16  33.19                    1.22     9.03
+             Cold Coffee       1368                     1124.62  27.31                    1.22     8.91
+Cold Drinks  Meals              192                      118.54   9.89                    1.62     7.43
+Cold Coffee  Desserts           482                      422.68  15.58                    1.14     3.81
+Breakfast    Desserts           157                      123.28   9.07                    1.27     3.72
+             Cold Drinks        192                      168.18  12.94                    1.14     1.84
+             Cold Coffee        252                      225.12  16.36                    1.12     1.64
+Cold Coffee  Meals              173                      156.06  11.59                    1.11     1.46
+Breakfast    Meals               56                       46.80   6.56                    1.20     1.40
+Desserts     Sandwiches         236                      219.04  13.25                    1.08     1.28
+             Meals              101                       90.02   8.62                    1.12     1.27
+             Hot Coffee         477                      452.46  20.06                    1.05     1.22
+Cold Drinks  Desserts           319                      300.06  16.70                    1.06     1.13
+Breakfast    Sandwiches         133                      125.48   8.48                    1.06     0.89
+Hot Coffee   Meals              180                      176.64  14.22                    1.02     0.24
+Breakfast    Hot Coffee         287                      285.06  14.36                    1.01     0.14
+Cold Drinks  Hot Coffee         619                      618.34  24.18                    1.00     0.03
+Cold Coffee  Sandwiches         387                      389.52  16.68                    0.99    -0.15
+Breakfast    Breakfast           36                       38.90   6.24                    0.93    -0.46
+Meals        Meals               17                       18.80   3.87                    0.90    -0.47
+Cold Coffee  Cold Drinks        510                      521.06  22.39                    0.98    -0.49
+Meals        Sandwiches          84                       88.28   8.60                    0.95    -0.50
+Desserts     Matcha & Tea       459                      469.38  19.41                    0.98    -0.53
+Hot Coffee   Sandwiches         445                      462.32  19.30                    0.96    -0.90
+Cold Drinks  Cold Drinks        175                      194.66  12.80                    0.90    -1.54
+Breakfast    Matcha & Tea       221                      242.04  13.14                    0.91    -1.60
+Cold Coffee  Hot Coffee         766                      811.46  27.41                    0.94    -1.66
+Sandwiches   Sandwiches          87                      111.12  11.37                    0.78    -2.12
+Desserts     Desserts           106                      126.14   9.13                    0.84    -2.21
+Matcha & Tea Sandwiches         371                      431.30  21.07                    0.86    -2.86
+             Meals              129                      170.86  13.42                    0.76    -3.12
+Cold Drinks  Matcha & Tea       505                      584.12  22.40                    0.86    -3.53
+Cold Coffee  Cold Coffee        296                      360.00  16.04                    0.82    -3.99
+Bakery       Desserts           547                      640.34  23.16                    0.85    -4.03
+             Breakfast          289                      365.36  18.50                    0.79    -4.13
+Hot Coffee   Hot Coffee         433                      520.86  20.89                    0.83    -4.21
+             Matcha & Tea       757                      890.28  27.87                    0.85    -4.78
+Bakery       Meals              182                      250.38  13.95                    0.73    -4.90
+Cold Coffee  Matcha & Tea       666                      802.90  25.22                    0.83    -5.43
+Bakery       Sandwiches         490                      623.28  18.80                    0.79    -7.09
+Matcha & Tea Matcha & Tea       290                      454.20  20.20                    0.64    -8.13
+Bakery       Cold Drinks        605                      830.60  24.89                    0.73    -9.06
+             Bakery             521                      908.74  19.96                    0.57   -19.43

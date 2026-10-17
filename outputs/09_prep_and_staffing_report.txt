@@ -1,0 +1,135 @@
+====================================================================================================
+PHASE 7: DECISION MODELS — PERISHABLE PREP OPTIMIZER & HOURLY STAFFING / CAPACITY FORECAST
+Train: Jan-May 2026 | Test: unseen June 2026 | Model is fit once and NOT refit during June
+====================================================================================================
+
+====================================================================================================
+[TRACK A: HOW MANY UNITS OF EACH PERISHABLE SKU SHOULD EACH BRANCH PREP TOMORROW?]
+====================================================================================================
+Decision rule (newsvendor): prep the q-th quantile of tomorrow's demand, where
+  q = critical ratio = Cu / (Cu + Co),  Cu = unit gross profit lost on a stock-out,
+  Co = unit cost wasted on an unsold item = Unit Cost x (1 - salvage share).
+With zero salvage, q equals the item's gross margin -> Garden's 1.46x cost directly lowers its optimal prep.
+
+Scope: 22 perishable SKUs x 3 branches = 66 branch-SKU series, 24,259 units (44.9% of all units).
+Demand model: Poisson GLM  log(mu) = SKU-at-branch + DayOfWeek + trend   (train rows 9,966, test rows 1,980; mean June demand 2.51 units/SKU/day)
+  June forecast MAE: model 1.278 | lag-1 1.860 | lag-7 1.719 | 4-week same-weekday avg 1.418 units
+
+--- June 2026 out-of-sample prep simulation | salvage = 0% of unit cost ---
+Prep rule                                             June GP $  % oracle  Waste u  Lost u   Fill
+R1 Yesterday's sales (lag-1)                              4,447     26.5%    1,774   1,909  61.6%
+R2 Same weekday last week (lag-7)                         5,535     33.0%    1,666   1,738  65.1%
+R3 4-week same-weekday average, rounded up                7,227     43.1%    1,705   1,187  76.2%
+R4 Model mean forecast, rounded                           8,499     50.7%    1,197   1,283  74.2%
+R5 'Never run out' (model 95th pct)                        -644     -3.8%    5,374     138  97.2%
+R6 Model + ONE company-wide ratio (53%)                   8,490     50.7%    1,147   1,324  73.4%
+R7 Model + per-branch-SKU ratio (RECOMMENDED)             8,779     52.4%    1,249   1,324  73.4%
+Oracle (perfect foresight, upper bound)                  16,751    100.0%        0       0 100.0%
+  Decomposition of R7's gain over R3: better forecast (R4-R3) $+42.41/day + margin-based prep level (R7-R4) $+9.32/day
+  R7 vs R3: +$51.73/day across 66 SKUs (95% bootstrap CI over June days: $42.67 to $60.38)  ->  ~$18,880/yr at June volume
+  R7 vs R2: +$108.12/day across 66 SKUs (95% bootstrap CI over June days: $90.89 to $126.61)  ->  ~$39,463/yr at June volume
+  R7 vs R6: +$9.63/day across 66 SKUs (95% bootstrap CI over June days: $4.54 to $14.78)  ->  ~$3,516/yr at June volume
+
+  Calibration (target service level = mean critical ratio; achieved = share of June SKU-days with no stock-out):
+    Garden   target 41.6%  achieved 55.2%
+    Harbour  target 61.0%  achieved 67.4%
+    Uptown   target 59.1%  achieved 75.8%
+
+  June GP by branch, R7 vs R3 (zero salvage):
+    Garden   R7 $1,648 vs R3 $913  (diff $+735)
+    Harbour  R7 $5,895 vs R3 $5,416  (diff $+478)
+    Uptown   R7 $1,237 vs R3 $898  (diff $+339)
+
+  Garden's mean critical ratio is 42% vs Harbour's 61%: for identical demand, Garden should
+  prep to a LOWER service level — accepting more sell-outs — because each wasted unit costs it 1.46x more.
+
+--- June 2026 out-of-sample prep simulation | salvage = 30% of unit cost ---
+Prep rule                                             June GP $  % oracle  Waste u  Lost u   Fill
+R1 Yesterday's sales (lag-1)                              6,119     36.5%    1,774   1,909  61.6%
+R2 Same weekday last week (lag-7)                         7,084     42.3%    1,666   1,738  65.1%
+R3 4-week same-weekday average, rounded up                8,850     52.8%    1,705   1,187  76.2%
+R4 Model mean forecast, rounded                           9,620     57.4%    1,197   1,283  74.2%
+R5 'Never run out' (model 95th pct)                       4,418     26.4%    5,374     138  97.2%
+R6 Model + ONE company-wide ratio (62%)                   9,685     57.8%    1,489   1,070  78.5%
+R7 Model + per-branch-SKU ratio (RECOMMENDED)             9,934     59.3%    1,631   1,047  79.0%
+Oracle (perfect foresight, upper bound)                  16,751    100.0%        0       0 100.0%
+  Decomposition of R7's gain over R3: better forecast (R4-R3) $+25.67/day + margin-based prep level (R7-R4) $+10.46/day
+  R7 vs R3: +$36.13/day across 66 SKUs (95% bootstrap CI over June days: $28.42 to $43.64)  ->  ~$13,187/yr at June volume
+  R7 vs R2: +$95.00/day across 66 SKUs (95% bootstrap CI over June days: $80.40 to $109.68)  ->  ~$34,674/yr at June volume
+  R7 vs R6: +$8.30/day across 66 SKUs (95% bootstrap CI over June days: $3.83 to $12.91)  ->  ~$3,029/yr at June volume
+
+Assumptions & limits (Track A):
+  * Recorded sales = true demand. If items sold out in history, demand is under-counted (censored) and every rule under-preps.
+  * No substitution: a customer facing a sold-out SKU buys nothing. In reality many switch to a sibling SKU, which shrinks
+    the cost of stock-outs AND the absolute $ gaps between rules. Treat the $ figures as an upper-range simulation;
+    the ranking of rules and the Garden-vs-Harbour prep difference are the robust results.
+  * Achieved service levels exceed targets because demand is a small integer (~2.5/day): the optimal prep is the
+    smallest whole unit whose cumulative probability reaches the ratio, which overshoots it.
+  * Prep is decided once per day per SKU with no batch-size constraint; real bakery batches (e.g. trays of 6) blunt the gain.
+  * Waste value = Unit Cost from the data. If Garden's 1.46x cost is an accounting allocation (Finding 1), its true waste
+    cost is lower and its critical ratio should be closer to Harbour's — the audit in Finding 1 also sets this parameter.
+  * Practical test: run R7 at one branch for 4 weeks with daily waste and sell-out-time logs; compare waste $ and lost sales to R3.
+
+====================================================================================================
+[TRACK B: HOURLY ORDER FORECAST WITH PREDICTION INTERVALS -> STAFFING SCHEDULE & CAPACITY DATE]
+====================================================================================================
+Hourly counts are Poisson-like: mean variance/mean ratio within (month, weekday, branch, hour) cells = 1.00 (1.00 = Poisson)
+Model: Poisson GLM  log(mu) = Branch x Hour + DayOfWeek + trend   (train 7,701 branch-hours, test 1,530)
+
+June hourly forecast                               MAE    RMSE    Bias  Tue 20-22h MAE
+Baseline: Jan-May mean (branch x weekday x hour)    1.78    2.46   +0.95            3.01
+Baseline: same hour last week (lag-7)             2.24    3.02   +0.04            3.84
+Baseline: 4-week same weekday-hour average        1.79    2.39   +0.20            2.74
+Model: Poisson GLM with trend                     1.62    2.16   -0.02            2.61
+
+Prediction-interval coverage on June (does the stated range contain the actual count as often as claimed?):
+  80% interval -> actual coverage 87.5%  (discrete intervals are slightly conservative by construction)
+  90% interval -> actual coverage 94.4%  (discrete intervals are slightly conservative by construction)
+  One-sided 90th percentile (used for staffing): actual <= P90 in 92.6% of June branch-hours
+
+Staffing translation (ASSUMPTION-DRIVEN: throughput per staff-hour and wage are not in the data).
+Schedule rule: staff in hour h = max(1, ceil(P90 forecast / throughput)). Compared against a FLAT schedule that
+keeps each branch's daily peak-hour crew on all 17 opening hours (07:00-23:59), a common default.
+A second comparison, 'static profile', sizes each hour from the Jan-May P90 of that branch x weekday x hour with
+no trend: it shows how much of the saving needs no model at all, and what the trend term adds (fewer understaffed hours).
+
+ Throughput   Staff-hours in June (flat / static / model)  Saved vs flat   Understaffed hours (flat / static / model)
+          8                 3,366 / 1,789 / 2,010          1,356                          1 / 65 / 22
+         12                 2,533 / 1,593 / 1,680            853                          0 / 28 / 9
+         16                 1,989 / 1,545 / 1,572            417                          0 / 8 / 3
+
+Annualized labour saving vs flat schedule (June staff-hours saved x 365/30 x wage):
+ Throughput      $3/h      $5/h      $8/h
+          8    49,494    82,490   131,984
+         12    31,134    51,891    83,025
+         16    15,220    25,368    40,588
+
+The 07:00 opening hour in June (orders and gross profit per branch-hour):
+  Garden   1.50 orders/hour, $6.80 GP/hour (vs $5/h assumed staff cost; some of these orders would shift to 08:00 if opening moved)
+  Harbour  2.73 orders/hour, $15.49 GP/hour (vs $5/h assumed staff cost; some of these orders would shift to 08:00 if opening moved)
+  Uptown   1.10 orders/hour, $6.41 GP/hour (vs $5/h assumed staff cost; some of these orders would shift to 08:00 if opening moved)
+  Saturday 07:00-09:59 across all branches: 1.25 orders per branch-hour
+
+Capacity outlook — week's busiest hour (Tuesday 21:00), mean and P90 orders/hour by month:
+  Months 1-6 = observed mean over that month's Tuesdays; months 7-12 = model extrapolation IF the Jan-Jun
+  trend continues (the single most fragile assumption here; the 'growth stops' case stays at June's level).
+  Fitted trend: +8.5% per 30 days
+  Garden   M1:  9.0 M2: 14.5 M3: 12.2 M4: 14.0 M5: 15.0 M6: 13.0 | model June 14.6 | M7: 15.9(P90 21) M8: 17.2(P90 23) M9: 18.7(P90 24) M10: 20.2(P90 26) M11: 22.0(P90 28) M12: 23.8(P90 30)
+           at  8 orders/staff-h: June crew of 3 is exceeded at the P90 in month 10
+           at 12 orders/staff-h: June crew of 2 is exceeded at the P90 in month 10
+           at 16 orders/staff-h: June crew of 2 is exceeded at the P90 in not before December
+  Harbour  M1: 13.8 M2: 16.5 M3: 17.4 M4: 15.0 M5: 20.8 M6: 22.2 | model June 20.6 | M7: 22.3(P90 28) M8: 24.2(P90 31) M9: 26.3(P90 33) M10: 28.5(P90 35) M11: 30.9(P90 38) M12: 33.5(P90 41)
+           at  8 orders/staff-h: June crew of 4 is exceeded at the P90 in month 9
+           at 12 orders/staff-h: June crew of 3 is exceeded at the P90 in month 11
+           at 16 orders/staff-h: June crew of 2 is exceeded at the P90 in month 9
+  Uptown   M1:  4.2 M2:  6.8 M3:  4.8 M4:  6.0 M5:  8.0 M6:  7.4 | model June 8.5 | M7:  9.3(P90 13) M8: 10.0(P90 14) M9: 10.9(P90 15) M10: 11.8(P90 16) M11: 12.8(P90 18) M12: 13.9(P90 19)
+           at  8 orders/staff-h: June crew of 2 is exceeded at the P90 in month 11
+           at 12 orders/staff-h: June crew of 1 is exceeded at the P90 in month 7
+           at 16 orders/staff-h: June crew of 1 is exceeded at the P90 in month 11
+
+Assumptions & limits (Track B):
+  * Sales count = demand. If the Tuesday 21:00 queue already turns people away, true peak demand is higher.
+  * Seating is not modelled: 72% of post-18:00 orders are dine-in, so tables may bind before staff does.
+  * Throughput and wage are assumed; the staffing $ scale linearly with wage and the table shows the range.
+  * Practical test: time 2 weeks of Tuesday 20:00-22:00 orders (order-to-hand-off) to measure real throughput, then
+    reset the throughput constant; run the hourly roster at one branch for 4 weeks against its current roster.
