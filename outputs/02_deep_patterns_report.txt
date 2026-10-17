@@ -1,0 +1,390 @@
+===============================================================================================
+DEEP PATTERN SCANNER: DUPLICATES, DISCOUNTS, TIME REGIMES, MIX, CUSTOMERS & BASKETS
+===============================================================================================
+
+[1. FORENSIC CHECK ON DUPLICATE (Transaction ID, Product) ROWS]
+Total rows involved in (Transaction ID, Product) duplicates: 332 across 166 transactions
+Rows in (Transaction ID, Product) duplicates that are NOT exact duplicates: 68
+All non-exact (Transaction ID, Product) duplicate rows:
+      Transaction ID        Date   Branch Customer ID Order Type                 Product  Quantity  Discount Rate  Line Revenue (USD)
+2340     SYN-0001566  2026-01-12  Harbour      C01390    Dine-in              Iced Latte         1           0.10                5.06
+2341     SYN-0001566  2026-01-12  Harbour      C01390    Dine-in              Iced Latte         1           0.00                5.62
+2651     SYN-0001768  2026-01-13  Harbour         NaN    Dine-in              Chai Latte         1           0.00                5.51
+2652     SYN-0001768  2026-01-13  Harbour         NaN    Dine-in              Chai Latte         1           0.10                4.96
+2987     SYN-0001990  2026-01-14  Harbour      C01654    Dine-in                Mint Tea         1           0.00                3.83
+2988     SYN-0001990  2026-01-14  Harbour      C01654    Dine-in                Mint Tea         2           0.00                7.66
+4912     SYN-0003281  2026-01-23   Garden      C01951    Dine-in                Mint Tea         2           0.00                7.30
+4913     SYN-0003281  2026-01-23   Garden      C01951    Dine-in                Mint Tea         1           0.00                3.65
+4935     SYN-0003296  2026-01-23   Uptown      C03457   Takeaway            Banana Bread         1           0.10                3.84
+4936     SYN-0003296  2026-01-23   Uptown      C03457   Takeaway            Banana Bread         2           0.00                8.54
+5554     SYN-0003697  2026-01-26   Uptown      C02775    Dine-in          Classic Matcha         1           0.00                6.19
+5556     SYN-0003697  2026-01-26   Uptown      C02775    Dine-in          Classic Matcha         2           0.00               12.38
+8293     SYN-0005514  2026-02-06   Uptown      C01594    Dine-in              Iced Latte         1           0.00                5.14
+8295     SYN-0005514  2026-02-06   Uptown      C01594    Dine-in              Iced Latte         2           0.00               10.28
+10600    SYN-0007011  2026-02-15  Harbour         NaN    Dine-in             Iced Matcha         2           0.00               14.38
+10601    SYN-0007011  2026-02-15  Harbour         NaN    Dine-in             Iced Matcha         1           0.00                7.19
+14149    SYN-0009358  2026-03-02   Garden      C01452    Dine-in        Cheesecake Slice         1           0.00                6.75
+14151    SYN-0009358  2026-03-02   Garden      C01452    Dine-in        Cheesecake Slice         1           0.10                6.08
+16457    SYN-0010887  2026-03-10  Harbour         NaN    Dine-in          Peach Iced Tea         2           0.00                9.34
+16458    SYN-0010887  2026-03-10  Harbour         NaN    Dine-in          Peach Iced Tea         1           0.00                4.67
+16652    SYN-0011013  2026-03-10  Harbour         NaN   Takeaway             Iced Matcha         1           0.00                7.19
+16653    SYN-0011013  2026-03-10  Harbour         NaN   Takeaway             Iced Matcha         1           0.10                6.47
+19178    SYN-0012678  2026-03-20  Harbour      C02235    Dine-in        Butter Croissant         1           0.00                3.83
+19179    SYN-0012678  2026-03-20  Harbour      C02235    Dine-in        Butter Croissant         2           0.00                7.66
+21003    SYN-0013886  2026-03-27   Garden         NaN   Takeaway        Cheesecake Slice         1           0.10                6.08
+21005    SYN-0013886  2026-03-27   Garden         NaN   Takeaway        Cheesecake Slice         1           0.00                6.75
+21028    SYN-0013902  2026-03-27   Garden         NaN    Dine-in              Iced Latte         1           0.10                4.81
+21029    SYN-0013902  2026-03-27   Garden         NaN    Dine-in              Iced Latte         1           0.00                5.35
+22002    SYN-0014535  2026-03-31  Harbour         NaN    Dine-in           Tuna Sandwich         1           0.00                9.29
+22004    SYN-0014535  2026-03-31  Harbour         NaN    Dine-in           Tuna Sandwich         1           0.10                8.36
+22716    SYN-0015003  2026-04-02   Uptown      C01745    Dine-in              Chai Latte         1           0.00                5.04
+22717    SYN-0015003  2026-04-02   Uptown      C01745    Dine-in              Chai Latte         1           0.10                4.54
+22726    SYN-0015009  2026-04-02   Uptown         NaN   Takeaway              Iced Latte         1           0.00                5.14
+22727    SYN-0015009  2026-04-02   Uptown         NaN   Takeaway              Iced Latte         2           0.00               10.28
+25837    SYN-0017087  2026-04-13  Harbour      C03231    Dine-in         Sparkling Water         1           0.00                2.89
+25838    SYN-0017087  2026-04-13  Harbour      C03231    Dine-in         Sparkling Water         1           0.10                2.60
+26874    SYN-0017775  2026-04-16   Garden      C00762   Takeaway              Iced Latte         2           0.00               10.70
+26875    SYN-0017775  2026-04-16   Garden      C00762   Takeaway              Iced Latte         1           0.00                5.35
+27683    SYN-0018294  2026-04-19   Garden         NaN    Dine-in      Fresh Orange Juice         1           0.00                5.75
+27684    SYN-0018294  2026-04-19   Garden         NaN    Dine-in      Fresh Orange Juice         1           0.10                5.18
+31773    SYN-0021050  2026-05-03   Garden      C00119   Takeaway        Pistachio Cookie         1           0.10                3.11
+31774    SYN-0021050  2026-05-03   Garden      C00119   Takeaway        Pistachio Cookie         1           0.00                3.45
+32098    SYN-0021272  2026-05-04   Garden      C02397    Dine-in        Butter Croissant         1           0.00                3.65
+32099    SYN-0021272  2026-05-04   Garden      C02397    Dine-in        Butter Croissant         2           0.00                7.30
+33969    SYN-0022509  2026-05-10  Harbour      C03166   Takeaway        Cheesecake Slice         1           0.00                7.09
+33970    SYN-0022509  2026-05-10  Harbour      C03166   Takeaway        Cheesecake Slice         2           0.00               14.18
+34593    SYN-0022930  2026-05-12  Harbour         NaN   Takeaway             Iced Matcha         1           0.00                7.19
+34594    SYN-0022930  2026-05-12  Harbour         NaN   Takeaway             Iced Matcha         1           0.10                6.47
+35330    SYN-0023418  2026-05-14   Uptown      C03328   Takeaway          Iced Americano         1           0.00                3.70
+35331    SYN-0023418  2026-05-14   Uptown      C03328   Takeaway          Iced Americano         2           0.00                7.40
+35834    SYN-0023752  2026-05-16  Harbour         NaN    Dine-in              Iced Latte         1           0.15                4.78
+35836    SYN-0023752  2026-05-16  Harbour         NaN    Dine-in              Iced Latte         2           0.15                9.55
+37756    SYN-0024999  2026-05-22  Harbour      C02788   Takeaway           Halloumi Wrap         1           0.10                9.40
+37757    SYN-0024999  2026-05-22  Harbour      C02788   Takeaway           Halloumi Wrap         1           0.00               10.45
+39856    SYN-0026384  2026-05-28   Garden      C00897    Dine-in        Chocolate Cookie         1           0.00                3.15
+39857    SYN-0026384  2026-05-28   Garden      C00897    Dine-in        Chocolate Cookie         1           0.10                2.84
+44819    SYN-0029687  2026-06-12   Garden      C00545   Takeaway            Banana Bread         2           0.00                8.90
+44820    SYN-0029687  2026-06-12   Garden      C00545   Takeaway            Banana Bread         1           0.00                4.45
+46092    SYN-0030522  2026-06-16   Garden         NaN   Takeaway           Tuna Sandwich         1           0.00                8.85
+46093    SYN-0030522  2026-06-16   Garden         NaN   Takeaway           Tuna Sandwich         2           0.00               17.70
+47977    SYN-0031762  2026-06-22  Harbour      C00781    Dine-in     Chocolate Croissant         1           0.00                4.46
+47978    SYN-0031762  2026-06-22  Harbour      C00781    Dine-in     Chocolate Croissant         2           0.00                8.92
+48154    SYN-0031874  2026-06-22  Harbour      C03169   Takeaway  Chicken Pesto Sandwich         2           0.00               22.58
+48155    SYN-0031874  2026-06-22  Harbour      C03169   Takeaway  Chicken Pesto Sandwich         1           0.00               11.29
+49125    SYN-0032533  2026-06-25   Garden      C02510    Dine-in           Caramel Latte         1           0.00                5.75
+49126    SYN-0032533  2026-06-25   Garden      C02510    Dine-in           Caramel Latte         2           0.00               11.50
+50109    SYN-0033172  2026-06-28   Garden      C00726   Takeaway            Egg Sandwich         1           0.10                7.34
+50110    SYN-0033172  2026-06-28   Garden      C00726   Takeaway            Egg Sandwich         1           0.00                8.15
+
+Distribution of (Transaction ID, Product) duplicates by Branch:
+Branch
+Garden     51
+Harbour    83
+Uptown     32
+
+Distribution of (Transaction ID, Product) duplicates by tx_rows (basket size in rows):
+tx_rows
+2    81
+3    85
+
+===============================================================================================
+[2. DISCOUNT RATE MECHANICS (0.0, 0.10, 0.15)]
+===============================================================================================
+
+Value counts of Discount Rate:
+Discount Rate
+0.00    47812
+0.10     2861
+0.15      504
+
+Discount Rate cross-tab by HasCustomer (Known vs Anonymous Customer):
+Discount Rate       0.0       0.1      0.15
+HasCustomer                                
+False          0.934407  0.056123  0.009470
+True           0.934156  0.055778  0.010066
+All            0.934248  0.055904  0.009848
+Discount Rate    0.0   0.1  0.15    All
+HasCustomer                            
+False          17465  1049   177  18691
+True           30347  1812   327  32486
+All            47812  2861   504  51177
+
+Discount Rate cross-tab by Branch:
+Discount Rate       0.0       0.1      0.15
+Branch                                     
+Garden         0.945171  0.054829  0.000000
+Harbour        0.923826  0.055731  0.020443
+Uptown         0.941764  0.058236  0.000000
+All            0.934248  0.055904  0.009848
+Discount Rate    0.0   0.1  0.15    All
+Branch                                 
+Garden         15980   927     0  16907
+Harbour        22776  1374   504  24654
+Uptown          9056   560     0   9616
+All            47812  2861   504  51177
+
+Discount Rate cross-tab by Category:
+Discount Rate       0.0       0.1      0.15
+Category                                   
+Bakery         0.945753  0.054247  0.000000
+Breakfast      0.943445  0.056555  0.000000
+Cold Coffee    0.899343  0.056286  0.044371
+Cold Drinks    0.942670  0.057330  0.000000
+Desserts       0.905524  0.053890  0.040586
+Hot Coffee     0.940967  0.059033  0.000000
+Matcha & Tea   0.942216  0.057784  0.000000
+Meals          0.958126  0.041874  0.000000
+Sandwiches     0.945287  0.054713  0.000000
+All            0.934248  0.055904  0.009848
+Discount Rate    0.0   0.1  0.15    All
+Category                               
+Bakery         10478   601     0  11079
+Breakfast       2202   132     0   2334
+Cold Coffee     6567   411   324   7302
+Cold Drinks     4900   298     0   5198
+Desserts        4016   239   180   4435
+Hot Coffee      7667   481     0   8148
+Matcha & Tea    7142   438     0   7580
+Meals           1350    59     0   1409
+Sandwiches      3490   202     0   3692
+All            47812  2861   504  51177
+
+Discount Rate cross-tab by Order Type:
+Discount Rate       0.0       0.1      0.15
+Order Type                                 
+Dine-in        0.933085  0.056644  0.010272
+Takeaway       0.935933  0.054833  0.009234
+All            0.934248  0.055904  0.009848
+
+Discount Rate cross-tab by Hour of Day:
+Discount Rate      0.00      0.10      0.15
+Hour                                       
+7              0.938588  0.057745  0.003666
+8              0.938025  0.052937  0.009038
+9              0.939040  0.055772  0.005188
+10             0.939201  0.054446  0.006352
+11             0.934734  0.056325  0.008941
+12             0.937419  0.054324  0.008257
+13             0.942593  0.051111  0.006296
+14             0.935460  0.052671  0.011869
+15             0.937384  0.052180  0.010436
+16             0.935816  0.056738  0.007447
+17             0.933358  0.058220  0.008422
+18             0.931533  0.059987  0.008480
+19             0.927397  0.058690  0.013913
+20             0.930848  0.053322  0.015830
+21             0.930718  0.057605  0.011677
+22             0.934353  0.056269  0.009378
+23             0.933101  0.058778  0.008121
+
+Discount Rate cross-tab by DayOfWeek:
+Discount Rate      0.00      0.10      0.15
+DayOfWeek                                  
+Friday         0.931909  0.060841  0.007249
+Monday         0.937697  0.052972  0.009331
+Saturday       0.936561  0.053875  0.009565
+Sunday         0.935149  0.057717  0.007134
+Thursday       0.932532  0.053607  0.013861
+Tuesday        0.930548  0.057862  0.011590
+Wednesday      0.938528  0.052466  0.009006
+
+Discount Rate cross-tab by Month:
+Discount Rate      0.00      0.10      0.15
+Month                                      
+2026-01        0.941047  0.058953  0.000000
+2026-02        0.943662  0.056338  0.000000
+2026-03        0.921454  0.052286  0.026260
+2026-04        0.944284  0.055716  0.000000
+2026-05        0.913825  0.057416  0.028759
+2026-06        0.944685  0.055315  0.000000
+
+Discount Rate cross-tab by Basket Row Count (tx_rows):
+Discount Rate       0.0       0.1      0.15
+tx_rows                                    
+1              0.933095  0.056891  0.010014
+2              0.934378  0.055575  0.010047
+3              0.937896  0.054077  0.008027
+All            0.934248  0.055904  0.009848
+Discount Rate    0.0   0.1  0.15    All
+tx_rows                                
+1              16959  1034   182  18175
+2              26413  1571   284  28268
+3               4440   256    38   4734
+All            47812  2861   504  51177
+
+Within transactions that have at least one discounted line, how many lines are discounted?
+tx_disc_lines     1    2   All
+tx_rows                       
+1              1216    0  1216
+2              1669   93  1762
+3               244   25   269
+All            3129  118  3247
+
+===============================================================================================
+[3. TEMPORAL & MONTHLY TRENDS BY BRANCH]
+===============================================================================================
+                 tx_cnt  line_cnt   qty       rev        gp  known_cust_pct   disc_pct  takeaway_pct  margin_pct  rev_per_tx  gp_per_tx
+Month   Branch                                                                                                                         
+2026-01 Garden     1497      2282  2414  13492.08   6328.20       62.620508   5.652936     40.666082   46.903072    9.012745   4.227255
+        Harbour    2186      3267  3459  20155.37  13082.98       63.299663   5.999388     42.730334   64.910642    9.220206   5.984895
+        Uptown      862      1287  1359   7498.12   4700.52       64.257964   6.060606     38.150738   62.689314    8.698515   5.453039
+2026-02 Garden     1557      2358  2488  13804.05   6441.05       63.019508   5.682782     42.324003   46.660581    8.865800   4.136834
+        Harbour    2189      3313  3503  20046.85  13084.57       65.469363   5.825536     40.718382   65.269955    9.157995   5.977419
+        Uptown      873      1358  1438   7952.95   4967.52       62.150221   5.081001     39.101620   62.461351    9.109908   5.690172
+2026-03 Garden     1843      2813  2991  16699.11   7874.61       64.095272   5.296836     40.526129   47.155866    9.060830   4.272713
+        Harbour    2693      4045  4278  24405.72  15842.14       62.348578  10.754017     39.283066   64.911586    9.062651   5.882711
+        Uptown     1092      1672  1759   9674.05   6075.23       64.473684   5.143541     40.550239   62.799241    8.859020   5.563397
+2026-04 Garden     1887      2860  3013  16932.53   7912.31       63.146853   5.524476     40.104895   46.728457    8.973254   4.193063
+        Harbour    2770      4157  4419  25580.88  16631.54       63.627616   5.484725     41.568439   65.015512    9.234975   6.004166
+        Uptown     1093      1616  1714   9351.39   5858.43       63.180693   5.878713     38.799505   62.647692    8.555709   5.359954
+2026-05 Garden     2128      3215  3363  18685.42   8823.59       62.426128   5.754277     41.897356   47.221791    8.780742   4.146424
+        Harbour    3110      4733  4995  28704.36  18608.20       63.490387  11.324741     41.411367   64.827086    9.229698   5.983344
+        Uptown     1201      1788  1883  10300.17   6424.61       63.031320   6.599553     38.422819   62.373825    8.576328   5.349384
+2026-06 Garden     2251      3379  3564  20135.36   9414.73       62.888429   5.090263     43.119266   46.757197    8.945073   4.182466
+        Harbour    3386      5139  5439  31590.40  20504.51       64.253746   5.643121     40.299669   64.907409    9.329711   6.055673
+        Uptown     1269      1895  2008  10916.33   6855.75       64.485488   6.015831     40.949868   62.802700    8.602309   5.402482
+
+Monthly Transaction Count by Branch (Pivot):
+Branch   Garden  Harbour  Uptown
+Month                           
+2026-01    1497     2186     862
+2026-02    1557     2189     873
+2026-03    1843     2693    1092
+2026-04    1887     2770    1093
+2026-05    2128     3110    1201
+2026-06    2251     3386    1269
+
+Monthly Gross Profit by Branch (Pivot):
+Branch    Garden   Harbour   Uptown
+Month                              
+2026-01  6328.20  13082.98  4700.52
+2026-02  6441.05  13084.57  4967.52
+2026-03  7874.61  15842.14  6075.23
+2026-04  7912.31  16631.54  5858.43
+2026-05  8823.59  18608.20  6424.61
+2026-06  9414.73  20504.51  6855.75
+
+===============================================================================================
+[4. CATEGORY & ORDER TYPE MIX BY BRANCH]
+===============================================================================================
+
+Category Share of Quantity (%) by Branch:
+Branch           Garden    Harbour     Uptown
+Category                                     
+Bakery        20.888241  22.412141  20.745990
+Breakfast      4.704761   4.487794   4.576321
+Cold Coffee   13.833903  14.858391  13.788013
+Cold Drinks   10.144115  10.064002  10.382836
+Desserts      10.968429   7.753037   7.007184
+Hot Coffee    15.465710  16.218909  15.795689
+Matcha & Tea  14.630180  14.973365  14.585179
+Meals          2.803791   2.705707   2.932782
+Sandwiches     6.560870   6.526655  10.186005
+
+Category Share of Gross Profit (%) by Branch:
+Branch           Garden    Harbour     Uptown
+Category                                     
+Bakery        15.663083  16.720564  14.934009
+Breakfast      6.155062   6.446257   6.329357
+Cold Coffee   15.691634  15.306421  14.136980
+Cold Drinks    8.009084   7.387201   7.304758
+Desserts       9.036000   7.357340   6.593819
+Hot Coffee    15.452717  14.760203  14.058745
+Matcha & Tea  17.242906  17.234405  16.423686
+Meals          4.318158   4.679003   5.018884
+Sandwiches     8.431356  10.108605  15.199762
+
+Category Gross Margin (%) by Branch:
+Branch           Garden    Harbour     Uptown
+Category                                     
+Bakery        48.734505  65.737441  64.129414
+Breakfast     40.357273  60.260552  58.129940
+Cold Coffee   56.559281  70.907024  69.502963
+Cold Drinks   53.312650  68.524015  66.983615
+Desserts      35.640713  56.488519  55.008251
+Hot Coffee    57.024048  71.482296  70.152164
+Matcha & Tea  49.769771  66.667287  64.922826
+Meals         38.325459  58.962579  56.804620
+Sandwiches    34.216243  56.217352  54.130219
+
+Order Type Share (%) by Branch (Transaction level):
+Order Type    Dine-in   Takeaway
+Branch                          
+Garden      58.693899  41.306101
+Harbour     58.962899  41.037101
+Uptown      60.250391  39.749609
+
+===============================================================================================
+[5. HOURLY & DAY-OF-WEEK PATTERNS BY BRANCH]
+===============================================================================================
+
+Transactions by Hour and Branch:
+Branch  Garden  Harbour  Uptown    All
+Hour                                  
+7          237      340     147    724
+8          361      497     182   1040
+9          493      777     263   1533
+10         468      733     279   1480
+11         521      693     269   1483
+12         493      752     292   1537
+13         602      861     326   1789
+14         574      879     326   1779
+15         597      852     336   1785
+16         609      888     361   1858
+17         599      869     346   1814
+18         685     1011     388   2084
+19         864     1241     481   2586
+20        1072     1521     592   3185
+21        1413     2043     817   4273
+22        1035     1564     656   3255
+23         540      813     329   1682
+All      11163    16334    6390  33887
+
+Transactions by DayOfWeek and Branch:
+Branch     Garden  Harbour  Uptown
+DayOfWeek                         
+Monday       1552     2201     874
+Tuesday      2461     3555    1382
+Wednesday    1512     2282     861
+Thursday     1525     2246     908
+Friday       1675     2495     964
+Saturday     1109     1601     636
+Sunday       1329     1954     765
+
+===============================================================================================
+[6. CUSTOMER & LOYALTY DYNAMICS]
+===============================================================================================
+Total unique customers: 3,494
+Customers visiting >1 branch: 3,277 (93.79%)
+
+Customer Summary Statistics:
+          tx_count  branches_visited   total_rev     total_gp    total_qty   disc_lines  lifespan_days
+count  3494.000000       3494.000000  3494.00000  3494.000000  3494.000000  3494.000000    3494.000000
+mean      6.163137          2.496566    55.58182    32.621222     9.821122     0.612192     122.107041
+std       2.466785          0.611807    25.12214    14.680529     4.275885     0.808543      39.462311
+min       1.000000          1.000000     2.89000     1.540000     1.000000     0.000000       0.000000
+10%       3.000000          2.000000    25.29600    14.980000     5.000000     0.000000      66.000000
+25%       4.000000          2.000000    36.80500    21.792500     7.000000     0.000000     100.000000
+50%       6.000000          3.000000    53.44000    31.375000     9.000000     0.000000     131.000000
+75%       8.000000          3.000000    71.24750    41.820000    12.000000     1.000000     152.000000
+90%       9.000000          3.000000    89.25200    52.387000    16.000000     2.000000     165.000000
+95%      11.000000          3.000000   100.67550    58.640500    17.000000     2.000000     171.000000
+99%      13.000000          3.000000   123.53390    72.238000    21.000000     3.000000     177.000000
+max      18.000000          3.000000   178.29000   104.510000    33.000000     5.000000     180.000000
+
+Customer stats by Primary Branch:
+                customers    avg_tx  median_tx  one_and_done_pct    avg_rev     avg_gp  avg_lifespan
+primary_branch                                                                                      
+Garden               1235  5.963563        6.0          0.809717  53.310283  29.333296    119.463968
+Harbour              1954  6.386387        6.0          1.637666  57.913854  35.115502    125.079836
+Uptown                305  5.540984        5.0          2.950820  49.839377  29.954885    113.763934
+
+Transaction-Level Comparison: Known Customer vs Anonymous:
+                     tx_count  avg_items  multi_item_pct   avg_rev    avg_gp  disc_tx_pct  takeaway_pct
+Branch  HasCustomer                                                                                    
+Garden  False            4103   1.605411       47.477456  8.967931  4.200565     8.189130     41.506215
+        True             7060   1.592918       46.430595  8.916874  4.186908     8.045326     41.189802
+Harbour False            5924   1.601283       46.505739  9.238753  6.003602    11.090479     41.390952
+        True            10410   1.595293       46.234390  9.198195  5.973929    10.931796     40.835735
+Uptown  False            2326   1.590284       45.313844  8.682919  5.439243     8.254514     42.347377
+        True             4064   1.590059       45.866142  8.734385  5.470074     8.759843     38.262795

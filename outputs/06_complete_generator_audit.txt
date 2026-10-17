@@ -1,0 +1,71 @@
+===============================================================================================
+FINAL CHECK OF ALL SUB-DIMENSIONS (PRODUCT X HOUR, ORDER TYPE X BRANCH/HOUR, MINUTES/SECONDS)
+===============================================================================================
+
+[1. DOES PRODUCT SHARE WITHIN CATEGORY VARY BY HOUR, MONTH, OR ORDER TYPE?]
+  Category=Bakery          | p(Hour)=0.9285 | p(Month)=0.4523 | p(OrderType)=0.5410 | p(Branch)=0.1039 | p(row_num)=0.4215
+  Category=Breakfast       | p(Hour)=0.4016 | p(Month)=0.6105 | p(OrderType)=0.9474 | p(Branch)=0.6992 | p(row_num)=0.6077
+  Category=Cold Coffee     | p(Hour)=0.6365 | p(Month)=0.3689 | p(OrderType)=0.5384 | p(Branch)=0.3369 | p(row_num)=0.1527
+  Category=Cold Drinks     | p(Hour)=0.5853 | p(Month)=0.3652 | p(OrderType)=0.3324 | p(Branch)=0.6151 | p(row_num)=0.1455
+  Category=Desserts        | p(Hour)=0.0088 | p(Month)=0.3160 | p(OrderType)=0.1435 | p(Branch)=0.1450 | p(row_num)=0.9222
+  Category=Hot Coffee      | p(Hour)=0.0868 | p(Month)=0.1262 | p(OrderType)=0.9091 | p(Branch)=0.5858 | p(row_num)=0.0983
+  Category=Matcha & Tea    | p(Hour)=0.0379 | p(Month)=0.6165 | p(OrderType)=0.9150 | p(Branch)=0.3277 | p(row_num)=0.0684
+  Category=Meals           | p(Hour)=0.8992 | p(Month)=0.8996 | p(OrderType)=0.9688 | p(Branch)=0.1600 | p(row_num)=0.9383
+  Category=Sandwiches      | p(Hour)=0.0352 | p(Month)=0.0424 | p(OrderType)=0.6653 | p(Branch)=0.6608 | p(row_num)=0.1339
+
+[2. DOES CATEGORY X FIELD INTERACTION VARY?]
+Row 1 Category vs DayOfWeek Chi2 p-value: 0.7890
+Row 1 Category vs Month Chi2 p-value:     0.2824
+Row 1 Category vs HasCustomer p-value:    0.9447
+Row 1 Category vs OrderType p-value:      0.0000
+  Conditioned on Morning(7-10)   : Row 1 Category vs Order Type Chi2 p-value = 0.6330
+  Conditioned on Midday(11-17)   : Row 1 Category vs Order Type Chi2 p-value = 0.2734
+  Conditioned on Evening(18-23)  : Row 1 Category vs Order Type Chi2 p-value = 0.4453
+
+[3. DOES HOURLY PROFILE VARY BY DAY OF WEEK, BRANCH, OR MONTH?]
+Hour vs Branch Chi2 p-value:      0.9162
+Hour vs DayOfWeek Chi2 p-value:   0.5678
+Hour vs Month Chi2 p-value:       0.6457
+Hour vs HasCustomer Chi2 p-value: 0.3500
+
+Minute min=0, max=59, uniform Chi2 p=0.0000
+Second min=0, max=59, uniform Chi2 p=0.0993
+
+[4. ROW 1 CATEGORY DISTRIBUTION (%) BY BRANCH]
+Branch        Garden  Harbour  Uptown
+Category                             
+Bakery         19.29    21.11   18.87
+Breakfast       4.54     4.47    4.66
+Cold Coffee    13.82    15.23   13.76
+Cold Drinks     9.82     9.55    9.84
+Desserts       13.25     8.48    7.42
+Hot Coffee     13.71    14.82   14.60
+Matcha & Tea   16.09    16.79   16.07
+Meals           2.71     2.69    2.94
+Sandwiches      6.76     6.86   11.83
+
+[5. ROW 1 CATEGORY DISTRIBUTION (%) BY HOUR REGIME]
+HourRegime    Morning(7-10)  Midday(11-17)  Evening(18-23)
+Category                                                  
+Bakery                29.12          20.02           17.61
+Breakfast              7.91           5.75            2.72
+Cold Coffee            9.38          11.99           17.68
+Cold Drinks            8.52          10.98            9.11
+Desserts               2.47           8.66           12.76
+Hot Coffee            23.70          17.44            9.68
+Matcha & Tea          10.95          13.28           20.17
+Meals                  1.13           3.31            2.80
+Sandwiches             6.82           8.57            7.47
+
+[6. BASKET SIZE (1, 2, 3 ROWS) DISTRIBUTION (%) BY ROW 1 CATEGORY]
+tx_rows           1      2     3
+Category                        
+Bakery        56.46  39.34  4.20
+Breakfast     57.72  37.98  4.30
+Cold Coffee   56.53  38.75  4.73
+Cold Drinks   56.44  39.57  3.99
+Desserts      55.09  40.44  4.46
+Hot Coffee    57.99  38.14  3.87
+Matcha & Tea  45.50  48.82  5.68
+Meals         44.47  50.48  5.05
+Sandwiches    45.55  48.29  6.16

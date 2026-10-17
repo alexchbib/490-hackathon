@@ -1,0 +1,141 @@
+==========================================================================================
+PHASE 1 & 2: FORENSIC DATA QUALITY AUDIT & DEEP PATTERN DISCOVERY
+==========================================================================================
+
+[1. BASIC SHAPE & SCHEMA]
+Total rows (line items): 51,177
+Total columns: 14
+Columns & Dtypes:
+  - Transaction ID            | dtype: str        | nulls:      0 ( 0.00%) | unique:  33,887
+  - Date                      | dtype: str        | nulls:      0 ( 0.00%) | unique:     181
+  - Time                      | dtype: str        | nulls:      0 ( 0.00%) | unique:  25,148
+  - Branch                    | dtype: str        | nulls:      0 ( 0.00%) | unique:       3
+  - Customer ID               | dtype: str        | nulls: 18,691 (36.52%) | unique:   3,494
+  - Order Type                | dtype: str        | nulls:      0 ( 0.00%) | unique:       2
+  - Product                   | dtype: str        | nulls:      0 ( 0.00%) | unique:      45
+  - Category                  | dtype: str        | nulls:      0 ( 0.00%) | unique:       9
+  - Quantity                  | dtype: int64      | nulls:      0 ( 0.00%) | unique:       2
+  - Unit Price (USD)          | dtype: float64    | nulls:      0 ( 0.00%) | unique:     107
+  - Discount Rate             | dtype: float64    | nulls:      0 ( 0.00%) | unique:       3
+  - Unit Cost (USD)           | dtype: float64    | nulls:      0 ( 0.00%) | unique:     124
+  - Line Revenue (USD)        | dtype: float64    | nulls:      0 ( 0.00%) | unique:     369
+  - Line Gross Profit (USD)   | dtype: float64    | nulls:      0 ( 0.00%) | unique:     353
+
+Exact duplicate rows: 132
+Duplicate (Transaction ID, Product) pairs: 166
+Sample duplicate (Transaction ID, Product) rows:
+     Transaction ID        Date      Time   Branch Customer ID Order Type                   Product      Category  Quantity  Unit Price (USD)  Discount Rate  Unit Cost (USD)  Line Revenue (USD)  Line Gross Profit (USD)
+204     SYN-0000142  2026-01-01  19:47:18   Garden      C03183    Dine-in               Iced Matcha  Matcha & Tea         1              6.85            0.0             3.59                6.85                     3.26
+205     SYN-0000142  2026-01-01  19:47:18   Garden      C03183    Dine-in               Iced Matcha  Matcha & Tea         1              6.85            0.0             3.59                6.85                     3.26
+898     SYN-0000599  2026-01-05  11:03:56  Harbour         NaN   Takeaway  Turkey & Cheese Sandwich    Sandwiches         1             10.13            0.0             4.72               10.13                     5.41
+900     SYN-0000599  2026-01-05  11:03:56  Harbour         NaN   Takeaway  Turkey & Cheese Sandwich    Sandwiches         1             10.13            0.0             4.72               10.13                     5.41
+1019    SYN-0000685  2026-01-06  15:43:36   Garden      C01682   Takeaway                  Espresso    Hot Coffee         1              2.65            0.0             0.93                2.65                     1.72
+1020    SYN-0000685  2026-01-06  15:43:36   Garden      C01682   Takeaway                  Espresso    Hot Coffee         1              2.65            0.0             0.93                2.65                     1.72
+1242    SYN-0000829  2026-01-06  21:00:54   Uptown      C01193    Dine-in          Butter Croissant        Bakery         1              3.50            0.0             1.09                3.50                     2.41
+1243    SYN-0000829  2026-01-06  21:00:54   Uptown      C01193    Dine-in          Butter Croissant        Bakery         1              3.50            0.0             1.09                3.50                     2.41
+1334    SYN-0000890  2026-01-07  12:33:05  Harbour      C00502   Takeaway          Cheesecake Slice      Desserts         1              7.09            0.0             3.08                7.09                     4.01
+1335    SYN-0000890  2026-01-07  12:33:05  Harbour      C00502   Takeaway          Cheesecake Slice      Desserts         1              7.09            0.0             3.08                7.09                     4.01
+1665    SYN-0001117  2026-01-08  15:29:46   Uptown         NaN   Takeaway            Classic Matcha  Matcha & Tea         1              6.19            0.0             2.18                6.19                     4.01
+1666    SYN-0001117  2026-01-08  15:29:46   Uptown         NaN   Takeaway            Classic Matcha  Matcha & Tea         1              6.19            0.0             2.18                6.19                     4.01
+1918    SYN-0001290  2026-01-09  09:54:40   Uptown      C03014   Takeaway  Turkey & Cheese Sandwich    Sandwiches         1              9.26            0.0             4.53                9.26                     4.73
+1919    SYN-0001290  2026-01-09  09:54:40   Uptown      C03014   Takeaway  Turkey & Cheese Sandwich    Sandwiches         1              9.26            0.0             4.53                9.26                     4.73
+2070    SYN-0001389  2026-01-10  13:27:58   Uptown         NaN   Takeaway  Turkey & Cheese Sandwich    Sandwiches         1              9.26            0.0             4.53                9.26                     4.73
+2071    SYN-0001389  2026-01-10  13:27:58   Uptown         NaN   Takeaway  Turkey & Cheese Sandwich    Sandwiches         1              9.26            0.0             4.53                9.26                     4.73
+
+[2. INTRA-TRANSACTION CONSISTENCY CHECK]
+Unique Transaction IDs: 33,887
+  - Transactions with multiple 'Date': 0
+  - Transactions with multiple 'Time': 0
+  - Transactions with multiple 'Branch': 0
+  - Transactions with multiple 'Order Type': 0
+  - Transactions with multiple 'Customer ID' (incl NaN): 0
+Transaction ID min: SYN-0000001, max: SYN-0033887, unique count: 33,887
+Missing Transaction IDs in sequence: 0
+
+[3. ACCOUNTING & MATHEMATICAL INTEGRITY CHECK]
+Max abs diff in Line Revenue vs Qty*Price*(1-Disc): 0.005000
+Rows with Line Revenue diff > $0.01: 0
+Rows with Line Revenue diff > $0.05: 0
+Max abs diff in Line Gross Profit vs Rev - Qty*Cost: 0.000000
+Rows with Line Gross Profit diff > $0.01: 0
+Rows with Line Gross Profit diff > $0.05: 0
+
+Numerical Summary Statistics:
+           Quantity  Unit Price (USD)  Discount Rate  Unit Cost (USD)  Line Revenue (USD)  Line Gross Profit (USD)
+count  51177.000000      51177.000000   51177.000000     51177.000000        51177.000000             51177.000000
+mean       1.056861          5.691819       0.007068         2.336919            5.977786                 3.506077
+std        0.231580          2.168595       0.027031         1.387292            2.705202                 1.464681
+min        1.000000          1.870000       0.000000         0.550000            1.680000                 0.550000
+1%         1.000000          1.950000       0.000000         0.620000            1.950000                 1.020000
+5%         1.000000          2.890000       0.000000         0.720000            2.890000                 1.760000
+25%        1.000000          4.080000       0.000000         1.240000            4.150000                 2.590000
+50%        1.000000          5.410000       0.000000         1.980000            5.410000                 3.180000
+75%        1.000000          6.770000       0.000000         3.080000            6.880000                 4.170000
+95%        2.000000         10.130000       0.100000         4.960000           11.180000                 6.200000
+99%        2.000000         12.230000       0.100000         7.124000           14.680000                 8.580000
+max        2.000000         13.070000       0.150000         8.080000           26.140000                14.840000
+
+Rows with Line Gross Profit <= 0: 0 (0.00%)
+
+[4. PRODUCT, CATEGORY, PRICING & COST MECHANICS]
+Products mapped to >1 Category: 0
+
+Exact Price & Cost Multipliers across Branches by Product:
+                                      Unit Cost (USD)                Unit Price (USD)                Price_Harbour_vs_Garden Price_Uptown_vs_Garden Cost_Garden_vs_Harbour Cost_Uptown_vs_Harbour
+Branch                                         Garden Harbour Uptown           Garden Harbour Uptown                                                                                             
+Category     Product                                                                                                                                                                             
+Bakery       Almond Croissant                    2.73    1.91   1.83             4.85    5.09   4.66                1.049485               0.960825               1.429319               0.958115
+             Banana Bread                        2.25    1.57   1.51             4.45    4.67   4.27                1.049438               0.959551               1.433121               0.961783
+             Blueberry Muffin                    1.87    1.31   1.26             3.95    4.15   3.79                1.050633               0.959494               1.427481               0.961832
+             Butter Croissant                    1.63    1.14   1.09             3.65    3.83   3.50                1.049315               0.958904               1.429825               0.956140
+             Chocolate Cookie                    1.30    0.91   0.87             3.15    3.31   3.02                1.050794               0.958730               1.428571               0.956044
+             Chocolate Croissant                 2.26    1.58   1.52             4.25    4.46   4.08                1.049412               0.960000               1.430380               0.962025
+             Cinnamon Roll                       3.20    2.24   2.15             5.15    5.41   4.94                1.050485               0.959223               1.428571               0.959821
+             Pistachio Cookie                    1.69    1.18   1.13             3.45    3.62   3.31                1.049275               0.959420               1.432203               0.957627
+Breakfast    Avocado Toast                       5.98    4.18   4.01             9.45    9.92   9.07                1.049735               0.959788               1.430622               0.959330
+             Egg Sandwich                        4.45    3.11   2.99             8.15    8.56   7.82                1.050307               0.959509               1.430868               0.961415
+             Granola Yoghurt                     4.75    3.32   3.19             7.85    8.24   7.54                1.049682               0.960510               1.430723               0.960843
+Cold Coffee  Coffee Frappe                       3.62    2.53   2.43             6.55    6.88   6.29                1.050382               0.960305               1.430830               0.960474
+             Cold Brew                           1.66    1.16   1.11             5.15    5.41   4.94                1.050485               0.959223               1.431034               0.956897
+             Iced Americano                      1.23    0.86   0.83             3.85    4.04   3.70                1.049351               0.961039               1.430233               0.965116
+             Iced Latte                          2.37    1.66   1.59             5.35    5.62   5.14                1.050467               0.960748               1.427711               0.957831
+             Iced Mocha                          3.19    2.23   2.14             6.25    6.56   6.00                1.049600               0.960000               1.430493               0.959641
+Cold Drinks  Fresh Orange Juice                  3.03    2.12   2.04             5.75    6.04   5.52                1.050435               0.960000               1.429245               0.962264
+             Lemonade                            1.67    1.17   1.12             4.65    4.88   4.46                1.049462               0.959140               1.427350               0.957265
+             Peach Iced Tea                      1.64    1.15   1.10             4.45    4.67   4.27                1.049438               0.959551               1.426087               0.956522
+             Sparkling Water                     1.93    1.35   1.30             2.75    2.89   2.64                1.050909               0.960000               1.429630               0.962963
+             Still Water                         0.93    0.65   0.62             1.95    2.05   1.87                1.051282               0.958974               1.430769               0.953846
+Desserts     Brownie                             3.39    2.37   2.28             5.15    5.41   4.94                1.050485               0.959223               1.430380               0.962025
+             Cheesecake Slice                    4.40    3.08   2.96             6.75    7.09   6.48                1.050370               0.960000               1.428571               0.961039
+             Frozen Yoghurt Cup                  3.85    2.69   2.58             6.15    6.46   5.90                1.050407               0.959350               1.431227               0.959108
+             Tiramisu Cup                        4.08    2.85   2.74             6.55    6.88   6.29                1.050382               0.960305               1.431579               0.961404
+Hot Coffee   Americano                           1.03    0.72   0.69             3.15    3.31   3.02                1.050794               0.958730               1.430556               0.958333
+             Cappuccino                          1.60    1.12   1.08             4.05    4.25   3.89                1.049383               0.960494               1.428571               0.964286
+             Caramel Latte                       2.67    1.87   1.80             5.75    6.04   5.52                1.050435               0.960000               1.427807               0.962567
+             Espresso                            0.93    0.65   0.62             2.65    2.78   2.54                1.049057               0.958491               1.430769               0.953846
+             Flat White                          1.77    1.24   1.19             4.35    4.57   4.18                1.050575               0.960920               1.427419               0.959677
+             Spanish Latte                       2.83    1.98   1.90             5.95    6.25   5.71                1.050420               0.959664               1.429293               0.959596
+             Vanilla Latte                       2.46    1.72   1.65             5.45    5.72   5.23                1.049541               0.959633               1.430233               0.959302
+Matcha & Tea Chai Latte                          2.12    1.48   1.42             5.25    5.51   5.04                1.049524               0.960000               1.432432               0.959459
+             Classic Matcha                      3.25    2.27   2.18             6.45    6.77   6.19                1.049612               0.959690               1.431718               0.960352
+             English Breakfast Tea               0.82    0.57   0.55             3.45    3.62   3.31                1.049275               0.959420               1.438596               0.964912
+             Iced Matcha                         3.59    2.51   2.41             6.85    7.19   6.58                1.049635               0.960584               1.430279               0.960159
+             Mint Tea                            0.90    0.63   0.60             3.65    3.83   3.50                1.049315               0.958904               1.428571               0.952381
+             Strawberry Matcha                   4.55    3.18   3.05             7.65    8.03   7.34                1.049673               0.959477               1.430818               0.959119
+Meals        Chicken Salad Bowl                  8.08    5.65   5.42            12.45   13.07  11.95                1.049799               0.959839               1.430088               0.959292
+             Quinoa Bowl                         7.04    4.92   4.72            11.65   12.23  11.18                1.049785               0.959657               1.430894               0.959350
+             Soup of the Day                     3.99    2.79   2.68             7.15    7.51   6.86                1.050350               0.959441               1.430108               0.960573
+Sandwiches   Chicken Pesto Sandwich              7.39    5.17   4.96            10.75   11.29  10.32                1.050233               0.960000               1.429400               0.959381
+             Halloumi Wrap                       5.92    4.14   3.97             9.95   10.45   9.55                1.050251               0.959799               1.429952               0.958937
+             Tuna Sandwich                       5.33    3.73   3.58             8.85    9.29   8.50                1.049718               0.960452               1.428954               0.959786
+             Turkey & Cheese Sandwich            6.75    4.72   4.53             9.65   10.13   9.26                1.049741               0.959585               1.430085               0.959746
+
+Any (Branch, Product) with >1 unique Price? 0
+Any (Branch, Product) with >1 unique Cost? 0
+
+[5. BRANCH-LEVEL PERFORMANCE OVERVIEW]
+         line_items  transactions  unique_customers  known_cust_rows  total_qty  total_rev  total_gp  avg_disc_rate  disc_incidence  known_cust_pct  margin_pct  avg_basket_rev  avg_basket_gp  items_per_tx
+Branch                                                                                                                                                                                                      
+Garden        16907         11163              3012            10656      17833   99748.55  46794.49       0.005483        5.482936       63.027149   46.912451        8.935640       4.191928      1.597510
+Harbour       24654         16334              3320            15711      26093  150483.58  97753.94       0.008640        7.617425       63.725967   64.959871        9.212904       5.984691      1.597465
+Uptown         9616          6390              2391             6119      10161   55693.01  34882.06       0.005824        5.823627       63.633527   62.632743        8.715651       5.458851      1.590141

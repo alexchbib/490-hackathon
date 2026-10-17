@@ -1,0 +1,132 @@
+===============================================================================================
+EXHAUSTIVE SIGNAL VERIFICATION & DEEP HYPOTHESIS TESTING
+===============================================================================================
+
+[1. MULTI-ITEM BASKET TRANSITION MATRIX (ROW 1 -> ROW 2)]
+Row 1 Category -> Row 2 Category (% of Row 1):
+2             Bakery  Breakfast  Cold Coffee  Cold Drinks  Desserts  Hot Coffee  Matcha & Tea  Meals  Sandwiches
+1                                                                                                               
+Bakery         12.18       3.48        23.75         6.78      4.45       34.41          8.67   1.72        4.55
+Breakfast      20.18       4.93        13.71        12.02      8.01       17.41         12.63   2.62        8.47
+Cold Coffee    22.54       5.62        10.78        10.03      8.15       17.57         14.20   3.42        7.69
+Cold Drinks    19.57       5.10        14.05         9.99      7.48       19.29         13.70   3.07        7.76
+Desserts       20.35       5.54        14.61        10.74      5.00       17.34         15.68   3.94        6.80
+Hot Coffee     20.61       6.38        12.72        11.50      6.97       17.54         13.74   3.70        6.82
+Matcha & Tea   53.54       3.10         7.72         6.89      4.32       10.91          7.19   1.91        4.42
+Meals          18.96       5.61        10.44        26.31      5.22       14.89          9.09   2.90        6.58
+Sandwiches     17.10       4.61        11.03        26.59      6.56       16.19         11.10   2.51        4.33
+
+Row 1 Category -> Row 2 Category (Counts):
+2             Bakery  Breakfast  Cold Coffee  Cold Drinks  Desserts  Hot Coffee  Matcha & Tea  Meals  Sandwiches    All
+1                                                                                                                      
+Bakery           361        103          704          201       132        1020           257     51         135   2964
+Breakfast        131         32           89           78        52         113            82     17          55    649
+Cold Coffee      481        120          230          214       174         375           303     73         164   2134
+Cold Drinks      280         73          201          143       107         276           196     44         111   1431
+Desserts         305         83          219          161        75         260           235     59         102   1499
+Hot Coffee       423        131          261          236       143         360           282     76         140   2052
+Matcha & Tea    1624         94          234          209       131         331           218     58         134   3033
+Meals             98         29           54          136        27          77            47     15          34    517
+Sandwiches       245         66          158          381        94         232           159     36          62   1433
+All             3948        731         2150         1759       935        3044          1779    429         937  15712
+
+[2. CATEGORY PAIR CO-OCCURRENCE LIFT ACROSS ALL MULTI-ITEM BASKETS]
+Category Co-occurrence Lift Matrix (All 33,887 transactions):
+              Bakery  Breakfast  Cold Coffee  Cold Drinks  Desserts  Hot Coffee  Matcha & Tea   Meals  Sandwiches
+Bakery         3.206      0.391        0.605        0.377     0.393       0.656         0.877   0.415       0.420
+Breakfast      0.391     14.746        0.509        0.552     0.531       0.537         0.435   0.583       0.540
+Cold Coffee    0.605      0.509        4.834        0.472     0.523       0.467         0.432   0.573       0.504
+Cold Drinks    0.377      0.552        0.472        6.746     0.478       0.527         0.447   0.931       0.996
+Desserts       0.393      0.531        0.523        0.478     7.828       0.465         0.477   0.545       0.504
+Hot Coffee     0.656      0.537        0.467        0.527     0.465       4.390         0.439   0.555       0.529
+Matcha & Tea   0.877      0.435        0.432        0.447     0.477       0.439         4.647   0.427       0.458
+Meals          0.415      0.583        0.573        0.931     0.545       0.555         0.427  24.344       0.560
+Sandwiches     0.420      0.540        0.504        0.996     0.504       0.529         0.458   0.560       9.400
+
+Category Co-occurrence Lift Matrix (Within 15,712 Multi-Item Transactions):
+              Bakery  Breakfast  Cold Coffee  Cold Drinks  Desserts  Hot Coffee  Matcha & Tea   Meals  Sandwiches
+Bakery         2.336      0.463        0.730        0.435     0.497       0.755         0.978   0.430       0.458
+Breakfast      0.463     11.127        0.636        0.660     0.697       0.640         0.503   0.626       0.610
+Cold Coffee    0.730      0.636        3.710        0.574     0.697       0.566         0.507   0.626       0.580
+Cold Drinks    0.435      0.660        0.574        4.958     0.611       0.612         0.503   0.973       1.096
+Desserts       0.497      0.697        0.697        0.611     6.310       0.593         0.588   0.626       0.608
+Hot Coffee     0.755      0.640        0.566        0.612     0.593       3.216         0.492   0.579       0.580
+Matcha & Tea   0.978      0.503        0.507        0.503     0.588       0.492         3.300   0.432       0.487
+Meals          0.430      0.626        0.626        0.973     0.626       0.579         0.432  16.065       0.554
+Sandwiches     0.458      0.610        0.580        1.096     0.608       0.580         0.487   0.554       6.530
+
+[3. FINANCIAL ANATOMY OF DISCOUNTS (10% AND 15%)]
+                       lines    qty  gross_rev  actual_rev  disc_cost  actual_gp  counterfactual_gp  margin_actual_pct  margin_no_disc_pct  gp_erosion_pct
+Branch  Discount Rate                                                                                                                                     
+Garden  0.00           15980  16848   94737.90    94737.90       0.00   44737.44           44737.44              47.22               47.22            0.00
+        0.10             927    985    5566.55     5010.65     555.90    2057.05            2612.95              41.05               46.94           21.27
+Harbour 0.00           22776  24104  140354.11   140354.11       0.00   91556.04           91556.04              65.23               65.23            0.00
+        0.10            1374   1447    8282.32     7453.83     828.49    4588.18            5416.67              61.55               65.40           15.30
+        0.15             504    542    3147.19     2675.64     471.55    1609.72            2081.27              60.16               66.13           22.66
+Uptown  0.00            9056   9568   52791.25    52791.25       0.00   33173.10           33173.10              62.84               62.84            0.00
+        0.10             560    593    3223.91     2901.76     322.15    1708.96            2031.11              58.89               63.00           15.86
+
+Total Dollar Margin Given Away in Discounts across dataset: $2,178.09
+  - From 10% General Discounts (all branches): $1,706.54
+  - From 15% Harbour Mar/May Promo (Cold Coffee & Desserts): $471.55
+
+[4. DIFFERENCE-IN-DIFFERENCES (DiD) TEST: DID HARBOUR'S 15% PROMO LIFT VOLUME?]
+Promo Months (Mar & May) vs Non-Promo Months (Jan, Feb, Apr, Jun) by Branch:
+                      total_qty  target_qty  target_qty_share_pct  cold_coffee_share_pct  desserts_share_pct  avg_tx_size_qty  target_gp_per_unit
+Branch  IsPromoMonth                                                                                                                             
+Garden  False           11479.0      2876.0               25.0544                13.7817             11.2728           1.5961              2.6164
+        True             6354.0      1547.0               24.3469                13.9282             10.4186           1.6001              2.6156
+Harbour False           16820.0      3813.0               22.6694                14.8633              7.8062           1.5972              3.8337
+        True             9273.0      2087.0               22.5062                14.8496              7.6566           1.5980              3.6113
+Uptown  False            6519.0      1356.0               20.8007                14.0819              6.7188           1.5912              3.4308
+        True             3642.0       757.0               20.7853                13.2619              7.5233           1.5883              3.4071
+
+Harbour Target Category Share (Cold Coffee + Desserts): Promo = 22.51% vs Non-Promo = 22.67% (Chi2 p-value = 0.7747)
+
+[5. FINANCIAL ANATOMY OF GARDEN BRANCH COGS ANOMALY]
+COGS % of Unit Price across Branches (First 15 products + Summary):
+                        Garden_Price  Harbour_Price  Uptown_Price  Garden_Cost  Harbour_Cost  Uptown_Cost  Garden_COGS_pct  Harbour_COGS_pct  Uptown_COGS_pct  Ratio_HarbourCost_to_GardenCost  Ratio_UptownCost_to_GardenCost
+Product                                                                                                                                                                                                                       
+Almond Croissant                4.85           5.09          4.66         2.73          1.91         1.83           56.289            37.525           39.270                            0.700                           0.670
+Americano                       3.15           3.31          3.02         1.03          0.72         0.69           32.698            21.752           22.848                            0.699                           0.670
+Avocado Toast                   9.45           9.92          9.07         5.98          4.18         4.01           63.280            42.137           44.212                            0.699                           0.671
+Banana Bread                    4.45           4.67          4.27         2.25          1.57         1.51           50.562            33.619           35.363                            0.698                           0.671
+Blueberry Muffin                3.95           4.15          3.79         1.87          1.31         1.26           47.342            31.566           33.245                            0.701                           0.674
+Brownie                         5.15           5.41          4.94         3.39          2.37         2.28           65.825            43.808           46.154                            0.699                           0.673
+Butter Croissant                3.65           3.83          3.50         1.63          1.14         1.09           44.658            29.765           31.143                            0.699                           0.669
+Cappuccino                      4.05           4.25          3.89         1.60          1.12         1.08           39.506            26.353           27.763                            0.700                           0.675
+Caramel Latte                   5.75           6.04          5.52         2.67          1.87         1.80           46.435            30.960           32.609                            0.700                           0.674
+Chai Latte                      5.25           5.51          5.04         2.12          1.48         1.42           40.381            26.860           28.175                            0.698                           0.670
+Cheesecake Slice                6.75           7.09          6.48         4.40          3.08         2.96           65.185            43.441           45.679                            0.700                           0.673
+Chicken Pesto Sandwich         10.75          11.29         10.32         7.39          5.17         4.96           68.744            45.793           48.062                            0.700                           0.671
+Chicken Salad Bowl             12.45          13.07         11.95         8.08          5.65         5.42           64.900            43.229           45.356                            0.699                           0.671
+Chocolate Cookie                3.15           3.31          3.02         1.30          0.91         0.87           41.270            27.492           28.808                            0.700                           0.669
+Chocolate Croissant             4.25           4.46          4.08         2.26          1.58         1.52           53.176            35.426           37.255                            0.699                           0.673
+
+Summary of Cost/Price Ratios across all 45 products:
+       Garden_Price  Harbour_Price  Uptown_Price  Garden_Cost  Harbour_Cost  Uptown_Cost  Garden_COGS_pct  Harbour_COGS_pct  Uptown_COGS_pct  Ratio_HarbourCost_to_GardenCost  Ratio_UptownCost_to_GardenCost
+count       45.0000        45.0000       45.0000      45.0000       45.0000      45.0000          45.0000           45.0000          45.0000                          45.0000                         45.0000
+mean         5.8833         6.1773        5.6469       3.1582        2.2084       2.1198          50.5464           33.6625          35.3456                           0.6993                          0.6710
+std          2.4639         2.5869        2.3654       1.8824        1.3162       1.2632          12.1331            8.0764           8.5032                           0.0010                          0.0019
+min          1.9500         2.0500        1.8700       0.8200        0.5700       0.5500          23.7681           15.7459          16.6163                           0.6951                          0.6667
+25%          4.0500         4.2500        3.8900       1.6700        1.1700       1.1200          41.2698           27.4924          28.8079                           0.6989                          0.6703
+50%          5.3500         5.6200        5.1400       2.7300        1.9100       1.8300          51.0400           33.9939          35.6667                           0.6992                          0.6709
+75%          6.8500         7.1900        6.5800       4.0800        2.8500       2.7400          60.4292           40.2289          42.2182                           0.6998                          0.6719
+max         12.4500        13.0700       11.9500       8.0800        5.6500       5.4200          70.1818           46.7128          49.2424                           0.7012                          0.6750
+
+Garden Total Actual COGS (6 months): $52,954.06
+Garden Total COGS at Harbour Unit Costs: $37,030.59 (Excess COGS = $15,923.47)
+Garden Total COGS at Uptown Unit Costs:  $35,544.28 (Excess COGS = $17,409.78)
+
+Garden Excess COGS Breakdown by Category (vs Harbour Unit Cost):
+               qty       rev  actual_gp  excess_cogs  repaired_gp  actual_margin_pct  repaired_margin_pct  share_of_excess_cogs_pct
+Category                                                                                                                           
+Matcha & Tea  2609  16212.11    8068.73      2453.03     10521.76              49.77                64.90                     15.41
+Bakery        3725  15039.57    7329.46      2318.14      9647.60              48.73                64.15                     14.56
+Desserts      1956  11863.82    4228.35      2297.44      6525.79              35.64                55.01                     14.43
+Sandwiches    1170  11530.81    3945.41      2279.63      6225.04              34.22                53.99                     14.32
+Cold Coffee   2467  12982.52    7342.82      1694.90      9037.72              56.56                69.61                     10.64
+Hot Coffee    2758  12680.65    7231.02      1635.96      8866.98              57.02                69.93                     10.27
+Breakfast      839   7136.83    2880.23      1281.48      4161.71              40.36                58.31                      8.05
+Cold Drinks   1809   7029.87    3747.81       984.48      4732.29              53.31                67.32                      6.18
+Meals          500   5272.37    2020.66       978.41      2999.07              38.33                56.88                      6.14

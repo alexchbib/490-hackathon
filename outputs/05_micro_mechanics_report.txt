@@ -1,0 +1,102 @@
+===============================================================================================
+MICRO-MECHANICS CHECK: 3-ITEM BASKETS, DAILY OUTLIERS, TIME-OF-DAY & PRODUCT TRANSITIONS
+===============================================================================================
+
+[1. THREE-ITEM BASKETS: ROW 1 -> ROW 3 AND ROW 2 -> ROW 3 (%)]
+Row 1 -> Row 3 (%):
+3             Bakery  Breakfast  Cold Coffee  Cold Drinks  Desserts  Hot Coffee  Matcha & Tea  Meals  Sandwiches
+1                                                                                                               
+Bakery         23.78       2.80        12.94         9.09      8.39       14.69         16.78   2.80        8.74
+Breakfast      25.76       3.03        15.15        12.12      7.58       18.18         12.12   3.03        3.03
+Cold Coffee    16.81       3.02        17.67        12.07     12.50       12.93         12.50   6.03        6.47
+Cold Drinks    17.56       8.40        16.79         7.63      9.16       14.50         18.32   1.53        6.11
+Desserts       16.78       3.36        14.77         7.38     16.11       14.09         16.78   3.36        7.38
+Hot Coffee     24.34       5.82        12.17         9.52      8.47       13.23         13.76   3.70        8.99
+Matcha & Tea   20.89       4.43        16.14        10.13     10.44       12.66         14.87   1.90        8.54
+Meals          14.89       4.26        31.91         4.26      6.38       17.02         12.77   2.13        6.38
+Sandwiches     20.37       4.94        13.58        11.73      9.88       13.58         14.20   2.47        9.26
+
+Row 2 -> Row 3 (%):
+3             Bakery  Breakfast  Cold Coffee  Cold Drinks  Desserts  Hot Coffee  Matcha & Tea  Meals  Sandwiches
+2                                                                                                               
+Bakery         23.12       4.27        17.09         7.79     11.31       12.06         14.07   2.26        8.04
+Breakfast      16.88       2.60        23.38        12.99     10.39        3.90         22.08   5.19        2.60
+Cold Coffee    20.10       4.12        12.89        10.31     12.37       19.07          9.79   5.15        6.19
+Cold Drinks    20.75       5.66        11.79        10.38      9.43       16.04         13.68   3.30        8.96
+Desserts       19.28       4.82        16.87         9.64      8.43       13.25         19.28   1.20        7.23
+Hot Coffee     20.69       5.33        12.54        11.29      8.15       15.05         17.55   2.51        6.90
+Matcha & Tea   15.24       3.66        18.29         9.15     11.59       13.41         15.24   3.05       10.37
+Meals          22.50       5.00        17.50         2.50     15.00       10.00         17.50   2.50        7.50
+Sandwiches     21.98       0.00        17.58        12.09      7.69       13.19         12.09   4.40       10.99
+
+[2. DO BASKET TRANSITION RULES VARY BY BRANCH OR HOUR?]
+  Branch=Garden   | Matcha->Bakery: 54.6% | Bakery->Coffee: 59.2% | Sandwiches->ColdDrinks: 28.2% | Meals->ColdDrinks: 26.1%
+  Branch=Harbour  | Matcha->Bakery: 53.2% | Bakery->Coffee: 57.8% | Sandwiches->ColdDrinks: 26.9% | Meals->ColdDrinks: 26.5%
+  Branch=Uptown   | Matcha->Bakery: 52.4% | Bakery->Coffee: 57.2% | Sandwiches->ColdDrinks: 24.5% | Meals->ColdDrinks: 26.2%
+
+[3. DAILY TRANSACTION VOLUME DECOMPOSITION & OUTLIER DAYS]
+R^2 of (Month x DayOfWeek) explaining daily transaction count across 181 days: 0.9540
+Top 10 Highest Positive Residual Days:
+      Date   Month DayOfWeek  tx_cnt  expected  residual  rel_diff_pct
+2026-03-28 2026-03  Saturday     153    122.50     30.50     24.897959
+2026-03-29 2026-03    Sunday     171    145.20     25.80     17.768595
+2026-02-07 2026-02  Saturday     128    111.25     16.75     15.056180
+2026-05-21 2026-05  Thursday     231    201.00     30.00     14.925373
+2026-04-03 2026-04    Friday     231    201.75     29.25     14.498141
+2026-03-06 2026-03    Friday     213    188.50     24.50     12.997347
+2026-06-03 2026-06 Wednesday     242    216.25     25.75     11.907514
+2026-03-30 2026-03    Monday     191    171.40     19.60     11.435239
+2026-04-29 2026-04 Wednesday     219    196.60     22.40     11.393693
+2026-01-10 2026-01  Saturday     118    106.20     11.80     11.111111
+Top 10 Lowest Negative Residual Days:
+      Date   Month DayOfWeek  tx_cnt  expected  residual  rel_diff_pct
+2026-01-17 2026-01  Saturday      90    106.20    -16.20    -15.254237
+2026-03-21 2026-03  Saturday     104    122.50    -18.50    -15.102041
+2026-02-21 2026-02  Saturday      95    111.25    -16.25    -14.606742
+2026-03-20 2026-03    Friday     161    188.50    -27.50    -14.588859
+2026-05-14 2026-05  Thursday     172    201.00    -29.00    -14.427861
+2026-02-15 2026-02    Sunday     124    143.50    -19.50    -13.588850
+2026-01-08 2026-01  Thursday     128    144.80    -16.80    -11.602210
+2026-02-14 2026-02  Saturday      99    111.25    -12.25    -11.011236
+2026-05-15 2026-05    Friday     206    229.80    -23.80    -10.356832
+2026-03-22 2026-03    Sunday     131    145.20    -14.20     -9.779614
+
+Correlation between DayOfMonth and residual (within-month growth vs step-change): r = 0.0432, p = 0.5633
+
+[4. IS THE 10% DISCOUNT COMPLETELY UNTARGETED (RANDOM ~5.6%)?]
+Overall 10% discount rate on non-15%-promo lines: 5.660%
+  - Branch          | range: 5.48% to 5.82% | Chi2 p-value = 0.4399
+  - Order Type      | range: 5.50% to 5.77% | Chi2 p-value = 0.2136
+  - HasCustomer     | range: 5.63% to 5.72% | Chi2 p-value = 0.6859
+  - Category        | range: 4.19% to 6.05% | Chi2 p-value = 0.2663
+  - Month           | range: 5.45% to 5.92% | Chi2 p-value = 0.7123
+  - DayOfWeek       | range: 5.35% to 6.09% | Chi2 p-value = 0.2955
+  - Quantity        | range: 5.66% to 5.72% | Chi2 p-value = 0.9166
+  - tx_rows         | range: 5.46% to 5.78% | Chi2 p-value = 0.6330
+
+10% Discount Rate by Category (on non-15%-promo lines):
+              count  sum      mean  mean_pct
+Category                                    
+Bakery        11079  601  0.054247  5.424677
+Breakfast      2334  132  0.056555  5.655527
+Cold Coffee    6002  363  0.060480  6.047984
+Cold Drinks    5198  298  0.057330  5.732974
+Desserts       3762  211  0.056087  5.608719
+Hot Coffee     8148  481  0.059033  5.903289
+Matcha & Tea   7580  438  0.057784  5.778364
+Meals          1409   59  0.041874  4.187367
+Sandwiches     3692  202  0.054713  5.471289
+
+[5. SINGLE-ITEM VS MULTI-ITEM BASKET DRIVERS]
+Basket Expansion & Total Basket Gross Profit by Anchor (Row 1) Category:
+              first_item_txs  multi_item_pct  avg_tx_rows  avg_first_item_gp  avg_total_basket_rev  avg_total_basket_gp  incremental_second_items_gp
+Category                                                                                                                                            
+Meals                    931           55.53         1.61               5.90                 14.77                 7.91                         2.01
+Matcha & Tea            5565           54.50         1.60               4.05                  9.87                 5.97                         1.92
+Sandwiches              2632           54.45         1.61               5.21                 13.92                 7.24                         2.03
+Desserts                3338           44.91         1.49               3.06                  9.47                 4.76                         1.70
+Cold Drinks             3285           43.56         1.48               2.62                  6.99                 4.29                         1.68
+Bakery                  6807           43.54         1.48               2.61                  7.08                 4.29                         1.68
+Cold Coffee             4909           43.47         1.48               3.74                  8.58                 5.44                         1.70
+Breakfast               1535           42.28         1.47               4.90                 11.95                 6.51                         1.61
+Hot Coffee              4885           42.01         1.46               3.26                  7.65                 4.89                         1.63
